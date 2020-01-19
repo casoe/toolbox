@@ -1,0 +1,17 @@
+### Backport-Repository hinzufügen
+### Backport-Pakete werden automatisch niedriger gepinnt als die Standard-Pakete
+cat << EOF >> /etc/apt/sources.list
+
+# Backports for newer Kernel
+deb http://ftp.debian.org/debian stretch-backports main
+EOF
+
+### Before installing a newer kernel, it’s important that we upgrade installed packages to their newer 
+### versions in the backports-repo in order to be sure that dependencies will remain unbroken.
+apt-get -t stretch-backports upgrade
+
+### Kernel aus dem Backport-Repository installieren
+apt-get -t stretch-backports install linux-image-amd64
+apt-get -t stretch-backports install linux-compiler-gcc-6-x86
+
+

@@ -1,0 +1,6 @@
+### Link
+### https://www.linux-tips-and-tricks.de/de/raspberry/493-raspibackup-schnellstart-installiere-und-konfiguriere-raspibackup-in-5-minuten-um-ein-backup-zu-erstellen
+
+curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackup.sh
+chmod +x raspiBackup.sh
+

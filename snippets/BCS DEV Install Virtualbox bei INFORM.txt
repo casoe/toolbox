@@ -1,0 +1,102 @@
+﻿### Proxy für die Pakete in apt.conf setzen
+http://cacher.intern.inform-software.com:3142
+
+### Taskselect
+- Desktop-Environment rausnehmen
+- Nur SSH-Server und Standard-System-Utilities reinnehmen
+
+### Postgres und Backports in den Paketquellen ergänzen (nur für Monlist-Interface)
+# NodeJS 6.x
+deb https://deb.nodesource.com/node_6.x stretch main
+deb-src https://deb.nodesource.com/node_6.x stretch main
+
+# Postgres-Repository (bei Debian 10 wahrscheinlich erstmal nicht notwendig)
+deb http://apt.postgresql.org/pub/repos/apt/ stretch-pgdg main
+
+# Stretch Backports für OpenJDK11 (bei Debian 10 wahrscheinlich erstmal nicht notwendig)
+deb http://ftp.debian.org/debian stretch-backports main
+
+# Keys hinzufügen
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+curl -s https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+
+### Bash konfigurieren
+nano .bashrc
+
+### SSH Zugang
+mkdir .ssh
+nano .ssh/authorized_keys
+### Folgende Zeile ergänzen
+ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAsfDW7HTO2aNYj74C5ZyQyWoeyTw6J9h9ElQG7k/pW/JjT428Ghdfr7thYBjIjvvUu/U5dFbAYaUxBf+Xt+P8jLcSwv1DxfbnP4qJaKg5Gu3an88XZna8x2dn8FYYQ7/BJL/iUGpeL3h0jyunBIwOPoIncUK+xbEB3rP5jmS09GzBpreH7ELqrZlT6pYiqREAs9l3nFF38mLWqLUHdT74NIAK4UGtFHfAiL6w42CnEYfxp4vkJe0yExvI/bCdJsq3wF+gGtHXrHwVmPe0bJ/heN/mzWEwKYXC5K77lheUlDq/k/Iz453zPR/EJkwO5LNRdTdd5MhgpWMa/LPUJeXk8w== rsa-key-20130422
+chmod 0700 .ssh && chmod 0600 .ssh/*
+
+### Systemwerkzeuge installieren
+apt-get -y install dselect sudo mc unp curl unzip git apt-transport-https psmisc lsof bash-completion netstat
+
+### git konfigurieren
+nano /root/.gitconfig
+
+###IP-Adressen im Login-Screen
+nano /etc/issue
+
+IP-Address(es) enp0s3: \4{enp0s3}
+               enp0s8: \4{enp0s8}
+
+### Java 11 und Postgres installieren
+apt-get install -y openjdk-11-jdk-headless
+apt-get install -y postgresql-11
+
+### Für Java 11 unter Debian noch fontconfig installieren
+apt-get install -y fontconfig
+
+### nano /etc/postgresql/11/main/pg_hba.conf
+### Folgende Zeile hinzufügen
+host bcs all 127.0.0.1/32 md5
+
+### Postgres-Konfiguration anpassen
+### nano /etc/postgresql/10/main/postgresql.conf
+
+shared_buffers 		ca. 1/4 des physikalischen Arbeitspeichers (bzw. des Speichers, der für die Datenbank vorgesehen ist)
+effective_cache_size 	ca. 1/2 des physikalischen Arbeitspeichers (bzw. des Speichers, der für die Datenbank vorgesehen ist)
+work_mem 		Speicher, der für bestimmte Sortier-, Join-, und Gruppierungsfunktionen verwendet werden kann; diese Speicher wird pro Verbindung allokiert
+
+Beispiel für exklusiven Datenbank-Server mit 6GB RAM:
+shared_buffers = 1536MB
+effective_cache_size = 3072MB
+work_mem = 10MB
+
+### User und Datenbank anlegen
+su postgres
+
+createuser --interactive -P bcs
+### dreimal mit n antworten
+createdb -E UTF8 -O bcs bcs
+
+### Build-Umgebung installieren
+apt-get install -y build-essential libapr1-dev libssl-dev
+
+### Basis-Verzeichnis anlegen
+mkdir -p /opt/projektron/bcs
+cd /opt/projektron/bcs
+mkdir backup restore import export
+
+### git-Repo clonen und umbenennen
+git clone https://git.inform-software.com/gb30-bcs/gs3-bcs.git
+mv gs3-bcs server
+
+
+### Tomcat installieren
+...
+
+### Links zu den conf-Verzeichnissen herstellen
+cd tomcat
+ln -s conf85_live_test conf
+
+cd ..
+ln -s conf_local_dev conf_local
+
+
+### Mailcatcher installieren
+apt-get install -y ruby rails ruby-dev
+gem install mailcatcher --no-ri --no-rdoc
+

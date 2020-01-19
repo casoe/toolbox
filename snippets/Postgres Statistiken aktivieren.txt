@@ -1,0 +1,26 @@
+pg_stat_statements aktiviert man in einer DB Instanz wie folgt:
+
+In der Konfigurationsdatei postgresql.conf (befindet sich unter Debian i.R. unter /etc/postgresql/9.5/main/postgresql.conf, allerdings kann "main" auch abweichen):
+
+shared_preload_libraries = 'pg_stat_statements'
+
+Hierzu postgresql-contrib-9.5 installieren, die alten PostgreSQL Pakete hatten das noch getrennt (braucht man root oder sudo dafür!).
+
+"main" ist der Clustername unter Debian, der eine Instanz eindeutig identifiziert. Wenn du wissen willst, welche es gibt (weil du z.B.
+"main" nicht hast), dann kannst du das Kommando
+
+pg_lsclusters
+
+benutzen, um die eine Liste aller aktiven PostgreSQL Instanzen anzeigen zu lassen.
+
+Ist alles in Stellung, kannst du mit 
+
+systemctl restart postgresql@9.5-main 
+
+die Instanz durchstarten lassen (nochmal, falls "main" abweichend benannt ist, das bitte durch den richtigen Clusternamen ersetzen).
+
+Ist die DB wieder oben, einfach dann mit psql als Superuser postgres auf die gewünschte DB verbinden (in unserem Fall ja bcs) und dort die Extension mit folgendem SQL aktivieren:
+
+CREATE EXTENSION bcs;
+
+Das müsste es dann gewesen sein ;)

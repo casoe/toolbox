@@ -1,0 +1,30 @@
+### Raspberry Pi PostgresDB für FHEM erzeugen
+
+### Postgres installieren
+sudo apt-get install postgresql
+
+### listen_addresses auf * setzen
+sudo nano /etc/postgresql/11/main/postgresql.conf
+
+### Zugriff konfigurieren
+sudo nano /etc/postgresql/11/main/pg_hba.conf
+
+### Folgende Zeilen hinzufügen
+# Zugriff im lokalen Netz
+host    fhem            all             127.0.0.1/32            md5
+host    fhem            all             192.168.2.1/8           md5
+
+### Datenbank neustarten
+sudo systemctl restart postgresql
+
+### Datenbank und User erzeugen
+sudo su postgres
+createuser --interactive -P fhem
+createdb -O fhem fhem
+
+### Dump mit Schema importieren (immer noch als User postgres)
+cd /opt/fhem/contrib/dblog/
+psql fhem < db_create_postgresql.sql
+
+### Alternativ: Backup-Dump importieren (Fehler können ignoriert werden)
+pg_restore -Fc -h localhost -U fhem -d fhem -C db_backup_2019-09-25.sqlc

@@ -1,0 +1,13 @@
+# SQL-Skript erzeugen
+echo 'select * from mitarbeiter;' > query_test.sql
+
+# Skript in psql pipen
+cat query_test.sql | psql postgresql://bcs:bcs@localhost/dashboard
+
+psql postgresql://bcs:bcs@localhost/dashboard -f query_test.sql
+
+PSQL="/usr/bin/psql"
+DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
+$PSQL $DBNAME << EOF >> fhem-sqltest.log
+select type, reading, count(*) from history group by type,reading order by type,reading;
+EOF

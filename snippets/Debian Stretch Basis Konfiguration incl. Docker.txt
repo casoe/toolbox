@@ -1,0 +1,31 @@
+﻿# IP-Adresse im Login-Screen anzeigen
+nano /etc/issue
+# Folgende Zeile ergänzen, darunter eine Leerzeile
+IP-Address: \4
+
+# Erweiterte Konfiguration für zusätzliche Netzwerkschnittstellen
+IP-Address(es) enp0s3: \4{enp0s3}
+               enp0s8: \4{enp0s8}
+
+# Bash konfigurieren
+nano .bashrc
+
+# SSH Zugang
+mkdir .ssh
+nano .ssh/authorized_keys
+# Folgende Zeile ergänzen
+ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAsfDW7HTO2aNYj74C5ZyQyWoeyTw6J9h9ElQG7k/pW/JjT428Ghdfr7thYBjIjvvUu/U5dFbAYaUxBf+Xt+P8jLcSwv1DxfbnP4qJaKg5Gu3an88XZna8x2dn8FYYQ7/BJL/iUGpeL3h0jyunBIwOPoIncUK+xbEB3rP5jmS09GzBpreH7ELqrZlT6pYiqREAs9l3nFF38mLWqLUHdT74NIAK4UGtFHfAiL6w42CnEYfxp4vkJe0yExvI/bCdJsq3wF+gGtHXrHwVmPe0bJ/heN/mzWEwKYXC5K77lheUlDq/k/Iz453zPR/EJkwO5LNRdTdd5MhgpWMa/LPUJeXk8w== rsa-key-20130422
+chmod 0700 .ssh && chmod 0600 .ssh/authorized_keys
+
+# Systemwerkzeuge installieren
+su root
+apt-get -y install dselect sudo mc unp curl unzip git bash-completion
+
+# sudo konfigurieren, user zur sudo-Gruppe hinzufügen
+su root
+usermod -aG sudo carsten
+
+# docker installieren
+su root
+curl -sSL get.docker.com | sh
+usermod -aG docker carsten

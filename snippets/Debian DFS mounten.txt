@@ -1,0 +1,19 @@
+### Gilt für Debian 9 und 10
+### Folgende Pakete nachinstallieren
+apt-get install cifs-utils keyutils
+
+### Mount-Verzeichnis erzeugen
+mkdir -p /mnt/dfs
+
+### Login-Credentials in Datei pipen
+echo $'username=svc-bcs-files\npassword=GU|qx-SaK%H$0HH#' > /root/.cifs
+
+### Danach testweise mounten
+mount -v -t cifs //sv00002.intern.inform-software.com/files /mnt/dfs/ -o rw,credentials=/root/.cifs
+mount -v -t cifs //dc01a.intern.inform-software.com/files /mnt/dfs/ -o rw,credentials=/root/.cifs
+
+### Angepasset Version für Windows Server 2019
+mount -v -t cifs //intern.inform-software.com/files /mnt/dfs/ -o vers=3.0,rw,credentials=/root/.cifs,noserverino
+
+### Funktioniert derzeit noch nicht
+mount -v -t cifs //intern.inform-software.com/files /mnt/dfs -o vers=3.11,rw,credentials=/root/.cifs,noserverino

@@ -1,0 +1,35 @@
+### Zeitzone einstellen & Zeitsynchronisierung über das Internet aktivieren
+sudo timedatectl set-timezone Europe/Berlin
+sudo timedatectl set-ntp true
+
+### Konfigurieren lokale Sprache deutsch
+sudo sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen
+sudo locale-gen
+sudo localectl set-locale LANG=de_DE.UTF-8 LANGUAGE=de_DE
+
+### Hostname 
+sudo hostnamectl set-hostname hades
+
+### System aktualisieren 
+sudo apt-get update && sudo -y apt-get upgrade
+
+### Neustart
+reboot
+
+### von debian.fhem.de installieren - siehe aktuelle Anleitung dort https://debian.fhem.de/
+wget -qO - http://debian.fhem.de/archive.key | sudo apt-key add -
+echo "deb http://debian.fhem.de/nightly/ /" | sudo tee -a /etc/apt/sources.list
+sudo apt-get update && sudo apt-get -y install fhem
+
+### Setzt die Systemzeit bei Start des RPi. Wird für FHEM benötigt, da es sonst nicht startet.	
+sudo apt-get install ntpdate
+sudo ntpdate -u de.pool.ntp.org
+
+### Weitere notwendige Pakete
+sudo apt-get install libjson-perl libnet-telnet-perl libcrypt-rijndael-perl \
+libdatetime-format-strptime-perl libwww-perl libsoap-lite-perl libjson-xs-perl \
+libxml-parser-lite-perl libdbd-pg-perl libsys-statistics-linux-perl
+
+### Berechtigungen für pi setzen
+sudo usermod -aG dialout pi
+sudo chmod g+w /opt/fhem/ -R

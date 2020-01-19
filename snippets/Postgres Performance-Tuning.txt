@@ -1,0 +1,18 @@
+### Postgres-Konfiguration anpassen
+# nano /etc/postgresql/11/main/pg_hba.conf
+# Folgende Zeile hinzufügen
+host bcs all 127.0.0.1/32 md5
+
+# nano /etc/postgresql/10/main/postgresql.conf
+listen_addresses = '*'
+
+shared_buffers 		ca. 1/4 des physikalischen Arbeitspeichers (bzw. des Speichers, der für die Datenbank vorgesehen ist)
+effective_cache_size 	ca. 1/2 des physikalischen Arbeitspeichers (bzw. des Speichers, der für die Datenbank vorgesehen ist)
+work_mem 		Speicher, der für bestimmte Sortier-, Join-, und Gruppierungsfunktionen verwendet werden kann; diese Speicher wird pro Verbindung allokiert
+
+#Beispiel für exklusiven Datenbank-Server mit 6GB RAM:
+# ---------------------------------
+shared_buffers = 1536MB
+effective_cache_size = 3072MB
+work_mem = 10MB
+# ---------------------------------

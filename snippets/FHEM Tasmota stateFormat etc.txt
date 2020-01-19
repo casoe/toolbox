@@ -1,0 +1,39 @@
+### Beispiel devStateIcon
+{my $alivecolor = 'lan_rs485@red';;$alivecolor='lan_rs485@green' if (ReadingsVal($name, "state", "dead") eq "alive");;"<div>" . FW_makeImage("$alivecolor","lan_rs485") . FW_makeImage("temp_temperature","temp_temperature") . ReadingsVal($name,"temperature2",0) ."°C ". FW_makeImage("humidity","humidity"). ReadingsVal($name,"humidity3",0) . "%rH</div>"}
+
+### Beispiel stateFormat
+{
+  my $state = ReadingsVal($name, "state", "off");
+  return '<div><img src="/fhem/images/default/on.png">'.sprintf("&nbsp;&nbsp; %.2f W", ReadingsVal($name,"power",0)).'</div>' if($state eq "on");
+  return '<div><img src="/fhem/images/default/off.png">'.sprintf("&nbsp;&nbsp; %.2f W", ReadingsVal($name,"power",0)).'</div>' if($state eq "off");
+}
+
+### Beispiel 2 stateFormat
+{
+	my $state = lc ReadingsVal($name, "state", "off");
+	my $devStateIcon = 'black_Steckdose.on.png';
+	
+	if ($state eq "off")
+	{
+		$devStateIcon = 'black_Steckdose.off.png';
+	}
+	"<div><img width='25px' height='25px' src='/fhem/images/default/" . $devStateIcon . "'>" . sprintf("&nbsp;&nbsp;[Aktuell: %.1f W / Tag: %.3f Kw/h / Total: %.2f kW/h]",
+		ReadingsVal($name,"ENERGY_Power",-1), 
+		ReadingsVal($name,"ENERGY_Today",-1), 
+		ReadingsVal($name,"ENERGY_Total",-1)
+	)
+}
+
+### Beispiel 1 stateFormat
+{
+	my $onl = ReadingsVal($name,"LWT","false") eq "Online"?"10px-kreis-gruen":"10px-kreis-rot";
+	my $light = ReadingsVal($name,"state","off");
+	"<a href=\"http://".ReadingsVal($name,"IPAddress","none")." \"target=\"_blank\">".FW_makeImage($onl)."</a> 
+	<a href=\"/fhem?cmd.dummy=set $name toggle&XHR=1\">".FW_makeImage($light)."</a> 
+	Uptime: ".ReadingsVal($name,"Uptime",undef).sprintf(" aktuell: %.1f W Tag: %.2f kWh 
+	Gestern: %.3f kWh Gesamt: %.4f kWh", ReadingsVal($name,"ENERGY_Power",undef), ReadingsVal($name,"ENERGY_Today",undef), ReadingsVal($name,"ENERGY_Yesterday",undef), ReadingsVal($name,"ENERGY_Total",undef))
+}
+
+
+
+attr TYPE=MQTT2_DEVICE userReadings state:POWER1:.* { lc(ReadingsVal($name,"POWER1","")) }

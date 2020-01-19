@@ -1,0 +1,24 @@
+### Proxy für den Docker-Demon eintragen
+mkdir -p /etc/systemd/system/docker.service.d
+cat << EOF > /etc/systemd/system/docker.service.d/http-proxy.conf
+[Service]
+Environment="HTTP_PROXY=proxy:80" "HTTPS_PROXY=proxy:80" "NO_PROXY=gs3-art-java,.inform-ac.com,.inform-software.com,.local,localhost,127.0.0.1,172.16.0.0/12,192.168.0.0/16"
+EOF
+
+### Docker auf anderes Subnetz umbiegen, weil es sonst ein Problem mit dem WLAN gibt (gleiches Subnetz)
+cat << EOF > /etc/docker/daemon.json
+{
+"insecure-registries": ["dev-nexus:10000","dev-nexus:13044","dev-nexus.inform-software.com:10000","dev-nexus.inform-software.com:13044"],
+"dns": ["172.16.1.150","172.16.1.151"],
+"dns-search": ["inform-ac.com","inform-software.com"],
+"bip": "10.255.1.1/24",
+"fixed-cidr": "10.255.1.1/25"
+}
+EOF
+ 
+### Systemd-Konfiguration neuladen und docker-Daemon neustarten
+systemctl daemon-reload
+systemctl restart docker
+
+### Test, ob docker jetzt wirklich funktioniert
+docker run hello-world

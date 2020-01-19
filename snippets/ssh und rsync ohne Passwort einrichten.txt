@@ -1,0 +1,21 @@
+﻿# Now setup ssh so that it doesn’t ask for password when you perform ssh. 
+# Use ssh-keygen on local server to generate public and private keys.
+ssh-keygen
+
+# Note: When it asks you to enter the passphrase just press enter key, and do not give any password here.
+
+# Use ssh-copy-id, to copy the public key to the remote host.
+ssh-copy-id -i ~/.ssh/id_rsa.pub osmc@192.168.2.38
+
+# It is required that your private key files are NOT accessible by others.
+chmod 0700 .ssh && chmod 0600 .ssh/*
+
+# Note: The above will ask the password for your account on the remote host, 
+# and copy the public key automatically to the appropriate location. If ssh-copy-id 
+# doesn’t work for you, use the method we discussed earlier to setup ssh password less login.
+
+# Now, you should be able to ssh to remote host without entering the password.
+ssh osmc@192.168.2.38
+
+# rsync should work the very same way
+rsync -avz /home/pi/backup/ osmc@192.168.2.38:/mnt/hd2tb/other/backup/hades

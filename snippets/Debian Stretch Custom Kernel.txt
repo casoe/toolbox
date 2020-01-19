@@ -1,0 +1,39 @@
+# Pakete für den Komfort
+sudo apt-get install dselect mc unp sudo 
+
+# Den lokalen Benutzer der Gruppe sudo hinzufügen
+nano /etc/group
+
+# Wechsel auf den lokalen User
+su - carsten
+
+# Installation der notwendigen Pakete zum Kernel bauen (das 2. ohne recommends wg. Plattenplatz)
+sudo apt-get install git fakeroot build-essential ncurses-dev xz-utils libssl-dev bc bzip2 libncurses5-dev
+sudo apt-get --no-install-recommends install kernel-package
+
+# Kernel runterladen
+wget https://cdn.kernel.org/pub/linux/kernel/v4.x/linux-4.11.tar.xz
+unp linux-4.11.tar.xz
+cd linux-4.11/
+
+# Konfiguration erstellen
+cp -v /boot/config-$(uname -r) .config
+make oldconfig
+make menuconfig
+
+# Debug ausschalten, sonst kommt ggf. eine Fehlermeldung
+scripts/config --disable DEBUG_INFO
+
+# Kompilieren/Kernel bauen
+fakeroot make -j5 deb-pkg LOCALVERSION=-mytest KDEB_PKGVERSION=1
+
+# Kernel installieren
+cd ..
+dpkg -i linux-image-4.10*
+dpkg -i linux-headers-4.10*
+grub-mkconfig
+reboot
+
+# Check auf Fehler
+dmesg | egrep -i --color 'error|critical|failed'
+

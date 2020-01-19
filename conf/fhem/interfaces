@@ -1,0 +1,21 @@
+# Localhost
+auto lo
+iface lo inet loopback
+
+# Ethernet
+auto eth0
+allow-hotplug eth0
+iface eth0 inet manual
+
+# WLAN
+auto wlan0
+allow-hotplug wlan0
+iface wlan0 inet manual
+wireless-power off
+
+# Netzwerkbrücke
+auto br0
+iface br0 inet dhcp
+bridge_ports eth0 wlan0 # build bridge
+bridge_fd 0             # no forwarding delay
+bridge_stp off          # disable Spanning Tree Protocol

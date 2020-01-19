@@ -1,0 +1,9 @@
+# Enable helper to temporarily store passwords in memory
+git config --global credential.helper cache
+
+# tell git to automatically rebase when pulling
+git config --global pull.rebase true
+
+# Reuse Recorded Resolution
+# allows to ask Git to remember how you’ve resolved a hunk conflict so that the next time it sees the same conflict, Git can resolve it for you automatically
+git config --global rerere.enabled true

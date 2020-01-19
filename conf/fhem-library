@@ -1,0 +1,14 @@
+/etc/network/interfaces
+/etc/dhcpcd.conf
+/etc/udev/rules.d/99-lesekopf.rules
+/etc/rc.local
+/opt/fhem/fhem.cfg
+/opt/fhem/db.conf
+/etc/postgresql/11/main/pg_hba.conf
+/etc/postgresql/11/main/postgresql.conf
+/etc/hostapd/hostapd.conf
+/etc/sysctl.conf
+/etc/default/homebridge
+/var/lib/homebridge/config.json
+/etc/systemd/system/homebridge.service
+

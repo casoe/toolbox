@@ -1,0 +1,40 @@
+# Grundkonfiguration nach Flashen
+- WLAN Olymp und Hades (ACHTUNG: Mittlerweile unterschiedliche Passwörter für Hades und Olymp)
+- MQTT-Server 192.168.2.35, technischen Gerätenamen setzen (siehe unten)
+- Sonstige Konfiguration: Friendly Name setzen (siehe unten)
+- Über FHEM das attrTemplate "tasmota_set_lowercase_texts_and_state1" einspielen
+
+# Tasmota-Steckdosen im Einsatz (Stand: 05.01.2020)
+  Nr | Friendly name          | Typ            | Template           | MQTT-Topic      | IP (DHCP)
+  --------------------------------------------------------------------------------------------------
+  01 | Bügeleisen             | OBI WLAN-Dose  | Obi Socket (51)    | obi-wlan1       | 192.168.2.47
+  02 | Fernseher & Peripherie | Sonoff POW1    | Sonoff Pow (6)     | sonoff-pow1     | 192.168.2.36
+  03 | Computer & Peripherie  | Sonoff POW1    | Sonoff Pow (6)     | sonoff-pow2     | 192.168.2.50
+  04 | Synology NAS           | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-01 | 192.168.2.35
+  05 | Zirkulationspumpe      | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-02 | 192.168.2.66
+  06 | Waschmaschine          | Gosund SP111 A | siehe unten        | gosund-sp111-03 | 192.168.2.67
+  07 | Trockner               | Sonoff SP111 A | siehe unten        | gosund-sp111-04 | 192.168.2.68
+
+# Neue Revision Gosund SP111 A (3450W)
+# https://www.malachisoord.com/2019/11/24/flashing-custom-firmware-on-a-gosund-sp111/
+Template {"NAME":"Gosund SP111 2","GPIO":[57,0,56,0,132,134,0,0,131,17,0,21,0],"FLAG":0,"BASE":45}
+
+# Kalibrieren
+VoltageSet 230
+CurrentSet 8200 (in Milliampere)
+PowerSet 1800 (in Watt)
+
+# Disable Wi-Fi Manager and alternatively retry AP1 and AP2 until connected without rebooting (Retry) 
+WifiConfig 4
+
+# Disable Wi-Fi Manager and keeps looking for current AP (Wait)
+Wificonfig 5
+
+# Dark theme for webinterface (Default as of 7.0.0)
+WebColor {"WebColor":["#eaeaea","#252525","#4f4f4f","#000000","#dddddd","#65c115","#1f1f1f","#ff5661","#008000","#faffff","#1fa3ec","#0e70a4","#d43535","#931f1f","#47c266","#5aaf6f","#faffff","#999999","#eaeaea"]}
+
+# Update der Daten alle 60 Sekunden
+TelePeriod 60
+
+# Switch relay(s) to their last saved state (default)
+PowerOnState 3

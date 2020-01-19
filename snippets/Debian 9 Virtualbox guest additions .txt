@@ -1,0 +1,17 @@
+### Login as root;
+### Update your APT database with apt-get update and install the latest security updates with apt-get upgrade;
+apt-get update && apt-get -y upgrade
+
+### Install required packages with apt-get install build-essential module-assistant;
+apt-get install build-essential module-assistant
+
+### Configure your system for building kernel modules by running m-a prepare;
+m-a prepare
+
+### Click on Install Guest Additions… from the Devices menu, then run mount /media/cdrom.
+### ggf. rechte Ctrl-Taste plus Pos1 drücken, um das Menü einzublenden (Fehlermeldung kann ignoriert werden)
+
+
+### Run sh /media/cdrom/VBoxLinuxAdditions.run, and follow the instructions on screen.
+mount /media/cdrom
+sh /media/cdrom/VBoxLinuxAdditions.run

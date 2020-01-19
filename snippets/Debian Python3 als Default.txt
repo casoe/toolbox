@@ -1,0 +1,26 @@
+### Quelle
+### https://linuxconfig.org/how-to-change-default-python-version-on-debian-9-stretch-linux
+
+# update-alternatives --list python
+update-alternatives: error: no alternatives for python
+
+#To install Python alternatives, first list all available options:
+ls -l /usr/bin/python*
+lrwxrwxrwx 1 root root      24 Oct 17 11:20 /usr/bin/python -> /etc/alternatives/python
+lrwxrwxrwx 1 root root       9 Mar  4  2019 /usr/bin/python2 -> python2.7
+-rwxr-xr-x 1 root root 3685224 Apr  6  2019 /usr/bin/python2.7
+lrwxrwxrwx 1 root root       9 Mar 26  2019 /usr/bin/python3 -> python3.7
+-rwxr-xr-x 2 root root 4877888 Apr  3  2019 /usr/bin/python3.7
+-rwxr-xr-x 2 root root 4877888 Apr  3  2019 /usr/bin/python3.7m
+lrwxrwxrwx 1 root root      10 Mar 26  2019 /usr/bin/python3m -> python3.7m
+
+# Next, update the Python alternatives list for each version you whish to use. In our case with stick with /usr/bin/python2.7 and /usr/bin/python3.5 versions:
+update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
+update-alternatives: using /usr/bin/python2.7 to provide /usr/bin/python (python) in auto mode
+
+# update-alternatives --install /usr/bin/python python /usr/bin/python3.7 2
+update-alternatives: using /usr/bin/python3.5 to provide /usr/bin/python (python) in auto mode
+
+# Please note that the integer number at the end of each command denotes a priority. Higher number means higher priority and as such the /usr/bin/python3.5 version was set in Auto Mode to be a default if no other selection is selected. After executing both above commands your current default python version is /usr/bin/python3.5 due to its higher priority (2):
+python --version
+Python 3.5.3

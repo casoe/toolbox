@@ -1,0 +1,29 @@
+/*
+ * Feiertage
+ *
+ * $FreeBSD$
+ */
+
+#ifndef _de_DE_feiertag_
+#define _de_DE_feiertag_
+
+LANG=UTF-8
+
+01/01		Neujahr
+Easter-48	Rosenmontag
+Easter-2	Karfreitag
+Easter  	Ostersonntag
+Easter+1 	Ostermontag
+05/01		Maifeiertag
+Easter+39	Christi Himmelfahrt
+Easter+49	Pfingstsonntag
+Easter+50	Pfingstmontag
+Easter+60	Fronleichnam
+10/03		Tag der deutschen Einheit
+11/01   	Allerheiligen
+12/24   	Heiligabend
+12/25   	Erster Weihnachtstag
+12/26   	Zweiter Weihnachtstag
+12/31   	Silvester
+
+#endif /*! _de_DE_feiertag_ */

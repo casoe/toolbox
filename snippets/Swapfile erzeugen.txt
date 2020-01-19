@@ -1,0 +1,10 @@
+# File mit 1GB Größe erzeugen
+dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+
+# Konfiguration an fstab anhängen 
+echo "/swapfile none    swap    sw      0       0" >> /etc/fstab
+
+# Swapfile formatieren, empfohlene Rechte setzen und aktivieren
+mkswap /swapfile
+chmod 0600 /swapfile
+swapon /swapfile

@@ -1,0 +1,14 @@
+# daily-backup.sh wertet daily-hooks aus, diese Datei enthält Beispiele für daily-hooks
+# WICHTIG: Leere Zeilen am Ende vermeiden
+
+# Volltextindex abräumen
+rm -rf /opt/projektron/bcs/server/data/FTIndex/*
+
+# Maintenance-Upgrade installieren
+/usr/bin/unzip -d /opt/projektron/bcs/server -o /opt/projektron/bcs/updates/projektron-bcs-18.1.22
+cat /opt/projektron/bcs/server/VERSION.TXT |  mail -E -s "[Info] BCS Maintenance Release auf Live installiert" "bcs-support@inform-software.com"
+
+# Tomcat-Update installieren
+rm -rf /opt/projektron/bcs/server/tomcat/bin/*
+rm -rf /opt/projektron/bcs/server/tomcat/lib/*
+cp -R  /opt/projektron/bcs/updates/apache-tomcat-7.0.76/* /opt/projektron/bcs/server/tomcat/
