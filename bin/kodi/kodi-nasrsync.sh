@@ -34,7 +34,7 @@ if [ ! $(mount | grep -o /mnt/persephone/photo ) ]; then
     mount /mnt/persephone/photo
 fi
 $RSYNC -avhW --no-compress --exclude '@eaDir' --delete /mnt/persephone/photo/*               /media/7ea28222-bdd1-44d2-b6ec-dfc9b130a0d4/photos/
-umount /mnt/persephone/music/
+umount /mnt/persephone/photo/
 
 ### Backup-Zeit ausgeben
 echo Backup time: `date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S"`
