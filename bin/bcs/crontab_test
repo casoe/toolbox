@@ -21,4 +21,4 @@
 # 
 # m  h  dom mon dow   command
   59 23 *   *   *     systemctl restart mailcatcher.service >> /opt/projektron/bcs/server/log/daily-mailcatcher-restart.log
-  30 19 *   *   *     /opt/projektron/bcs/updates/rsync-bcs.sh >> /opt/projektron/bcs/server/log/daily-rsync-bcs.log
+  30 19 *   *   *     /opt/projektron/bcs/updates/rsync-to-other.sh >> /opt/projektron/bcs/server/log/daily-rsync-to-bcs.log

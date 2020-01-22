@@ -22,7 +22,7 @@ rm -f $LOG
 exec > >(tee -ia $LOG)
 exec 2>&1
 
-echo $TODAY, Daily rollover for new backup started (experimental, db-backup with pg_dump, files with rsync) >> $STATISTICSLOG
+echo "$TODAY, Daily rollover for new backup started - experimental, db-backup with pg_dump, files with rsync" >> $STATISTICSLOG
 
 ### Stop rollover time
 ROLLOVERSTART=$(date +%s)
@@ -107,4 +107,4 @@ touch  $BCSHOME/inform_scripts/daily-hooks
 $BCSHOME/bin/ProjektronBCS.sh start
 
 ### Add rollover, backup time and sizes to the statistics log
-echo $TODAY, Daily rollover finished. Backup time `date -u -d "0 $BACKUPEND seconds - $BACKUPSTART seconds" +"%H:%M:%S"`. Rollover time `date -u -d "0 $(date +%s) seconds - $ROLLOVERSTART seconds" +"%H:%M:%S"`. Backup $BACKUPSIZE MB. Files $FILESTORESIZE MB. Database $DBSIZE MB. >> $STATISTICSLOG
+echo "$TODAY, Daily rollover finished. Backup time `date -u -d "0 $BACKUPEND seconds - $BACKUPSTART seconds" +"%H:%M:%S"`. Rollover time `date -u -d "0 $(date +%s) seconds - $ROLLOVERSTART seconds" +"%H:%M:%S"`. Backup $BACKUPSIZE MB. Files $FILESTORESIZE MB. Database $DBSIZE MB." >> $STATISTICSLOG

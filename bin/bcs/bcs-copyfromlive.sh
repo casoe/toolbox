@@ -43,8 +43,8 @@ mkdir -p $BCSHOME/../restore/db
 rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/current/files/ $BCSHOME/data
 rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/db/ $BCSHOME/../restore/db
 
-echo Restore auf Next-DB
-$PGRESTORE -v -j 12 -w -n public -h localhost -p 5432 -d bcs_next -U bcs -Fd $BCSHOME/../restore/db/
+echo Restore auf DB
+$PGRESTORE -v -j 12 -w -n public -h localhost -p 5432 -d bcs -U bcs -Fd $BCSHOME/../restore/db/
 
 if [[ "$MACHINE" != 'bcs' ]]; then
 	echo "Testserver-Restore: Deactivate Exchange-Synchronisation for all users"

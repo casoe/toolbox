@@ -59,6 +59,9 @@
 # Run hourly data-export of acquitions in ods30 and ods70 (only between 7 and 22 hrs)
   55 6-21 *   *   *   /opt/projektron/bcs/server/inform_scripts/hourly-export-bcs2ods-acquisitions.sh >> /opt/projektron/bcs/server/log/hourly-export-bcs2ods-acquisitions.log 2>&1
 
+# Datev-BCS: daily data import of the payed invoices from datev (provided by GB80) at 20:00 hrs
+  #00 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/import-payedinvoices-datev-gb30.sh > /opt/projektron/bcs/server/log/import-payedinvoices-datev-gb30.log 2>&1
+
 # Datev-BCS: daily data export of the unexported invoice items of finished invoices of the current month at 20:30 hrs
   30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb30-currentmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb30-currentmonth.log 2>&1
   30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb70-currentmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb70-currentmonth.log 2>&1
