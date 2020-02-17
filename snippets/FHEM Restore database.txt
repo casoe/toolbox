@@ -1,0 +1,8 @@
+# ggf. User und Datenbank anlegen
+su - postgres
+createuser --interactive -P fhem
+createdb -E UTF8 -O fhem fhem
+logout
+
+# Datenbank wiederherstellen (DB ist  bereits vorhanden)
+pg_restore -Fc -v --clean -h localhost -U fhem -d fhem db_backup_2020-02-17.sqlc
