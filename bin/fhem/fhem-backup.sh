@@ -44,7 +44,7 @@ $ZIP -rv $ZIPTARGET /home/pi/.bash_history >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/www/gplot/myPlot*.gplot >> $LOG 2>&1
 
 ### rsync zum NAS
-if [ ! $(mount | grep -o /mnt/persephone/backup ) ]; then
+if [ ! $(mount | grep -o /mnt/backup ) ]; then
   mount /mnt/backup
 fi
 sudo $RSYNC -avht --update /home/pi/backup/ /mnt/backup/hades/fhem  >> $LOG 2>&1

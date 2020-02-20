@@ -20,7 +20,8 @@
 # 
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
-# m h  dom mon dow   command
+# m  h  dom mon dow   command
 
-45 07 * * * /home/pi/bin/telegram-msg.sh > /dev/null
-00 01 * * * /home/pi/bin/fhem-backup.sh > /dev/null
+  45 07 *   *   *     /home/pi/bin/telegram-msg.sh > /dev/null
+  00 01 *   *   *     /home/pi/bin/fhem-backup.sh  > /dev/null
+  00 02 *   *   fri   /home/pi/bin/hades-backup.sh > /dev/null

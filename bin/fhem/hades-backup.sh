@@ -1,3 +1,30 @@
-mount /mnt/backup
-sudo raspiBackup.sh -a : -o : -m detailed
+#!/bin/bash
+# hades-backup.sh
+# Carsten Söhrens, 20.02.2020
+
+# set -x
+
+# Historie
+# 20.02.2020 Erste konsolidierte Version, soll einmal die Woche laufen
+
+RASPIBACKUP=/usr/local/bin/raspiBackup.sh
+LOG="/home/pi/weekly_backup_$TODAY.log"
+
+# Startzeit speichern
+START=$(date +%s)
+
+### NAS mounten
+if [ ! $(mount | grep -o /mnt/backup ) ]; then
+  mount /mnt/backup
+fi
+
+# Postgres-DB stoppen und Backup des Gesamtsystems durchführen
+sudo systemctl stop postgresql
+sudo $RASPIBACKUP -a : -o : -m detailed >> $LOG 2>&1
+
+# Restart Postgres und Backup-Mount aushängen
+sudo systemctl start postgresql
 umount /mnt/backup
+
+### Backup-Zeit ausgeben
+echo Backup time: `date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S"` >> $LOG 2>&1
