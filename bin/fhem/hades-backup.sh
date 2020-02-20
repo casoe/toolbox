@@ -20,10 +20,12 @@ fi
 
 # Postgres-DB stoppen und Backup des Gesamtsystems durchführen
 sudo systemctl stop postgresql
+sudo systemctl status postgresql >> $LOG 2>&1
 sudo $RASPIBACKUP -a : -o : -m detailed >> $LOG 2>&1
 
 # Restart Postgres und Backup-Mount aushängen
 sudo systemctl start postgresql
+sudo systemctl status postgresql >> $LOG 2>&1
 umount /mnt/backup
 
 ### Backup-Zeit ausgeben
