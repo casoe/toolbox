@@ -1,6 +1,17 @@
 ### Link
 ### https://www.linux-tips-and-tricks.de/de/raspberry/493-raspibackup-schnellstart-installiere-und-konfiguriere-raspibackup-in-5-minuten-um-ein-backup-zu-erstellen
+...
 
 curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackup.sh
 chmod +x raspiBackup.sh
 
+# Toolbox holen
+sudo apt update
+sudo apt install git
+git clone https://github.com/casoe/toolbox.git
+
+# fstab erweitern
+persephone:/volume1/backup /mnt/backup nfs user,atime,auto,rw,dev,exec,suid 0 0
+
+...
+sudo ./raspiBackup.sh -d /dev/sda /mnt/backup/hades/hades-rsync-backup-20200112-135636/
