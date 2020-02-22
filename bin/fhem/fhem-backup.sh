@@ -34,7 +34,7 @@ EOF
 $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 
 ### Wiederherstellen-Hinweis im Logfile
-echo "Wiederherstellen: pg_restore -Fc --clean --no-acl --no-owner -h localhost -U fhem -d fhem -C $DBTARGET" >> $LOG 2>&1
+echo "Wiederherstellen: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET" >> $LOG 2>&1
 
 ### Archivieren des Skripts und der Config-Dateien
 $ZIP -rv $ZIPTARGET /home/pi/bin/fhem-backup.sh >> $LOG 2>&1
