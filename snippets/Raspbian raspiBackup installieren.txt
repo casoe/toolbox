@@ -1,11 +1,12 @@
 ### Link
 ### https://www.linux-tips-and-tricks.de/de/raspberry/493-raspibackup-schnellstart-installiere-und-konfiguriere-raspibackup-in-5-minuten-um-ein-backup-zu-erstellen
-...
 
+# Ein Raspian in der Basiskonfiguration auf einer zweiten SD installieren und die Ziel-SD für den Restore mit Adapter in einem der USB-Ports stecken
+# Restore-System starten und raspiBackup.sh herunterladen
 curl -sSLO https://www.linux-tips-and-tricks.de/raspiBackup.sh
 chmod +x raspiBackup.sh
 
-# Toolbox holen
+# Toolbox holen (optional)
 sudo apt update
 sudo apt install git
 git clone https://github.com/casoe/toolbox.git
@@ -13,5 +14,5 @@ git clone https://github.com/casoe/toolbox.git
 # fstab erweitern
 persephone:/volume1/backup /mnt/backup nfs user,atime,auto,rw,dev,exec,suid 0 0
 
-...
+# Beispiel für einen Restore
 sudo ./raspiBackup.sh -d /dev/sda /mnt/backup/hades/hades-rsync-backup-20200112-135636/
