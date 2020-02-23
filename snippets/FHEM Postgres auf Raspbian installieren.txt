@@ -27,4 +27,4 @@ cd /opt/fhem/contrib/dblog/
 psql fhem < db_create_postgresql.sql
 
 ### Alternativ: Backup-Dump importieren (Fehler können ignoriert werden)
-pg_restore -Fc -h localhost -U fhem -d fhem -C db_backup_2019-09-25.sqlc
+pg_restore -Fc --clean -h localhost -U fhem -d fhem db_backup_2019-09-25.sqlc
