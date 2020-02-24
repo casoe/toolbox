@@ -26,10 +26,8 @@ while [ $(date -d "$DAY2" "+%s") -gt $(date -d "$DAY0" "+%s") ] ; do
 	# Den Wert für den Tag davor (DAY2) abfragen
 	TOTAL2=$($PSQL -X $DBNAME -t -c "select value from history where date_trunc('day', timestamp)= '$DAY2' and reading = 'total_consumption' and timestamp =( select max(timestamp) from history where date_trunc('day', timestamp)= '$DAY2' and reading = 'total_consumption');")
 
-
 	# Verbrauch berechnen
 	CONSUMPTION=$(bc <<< "$TOTAL1-$TOTAL2")
-
 
 	# Insert-Statement zusammenbauen
 	echo "insert into history (timestamp, device, type, event, reading, value, unit) values ('$(date -d "$DAY1" "+%Y-%m-%d 23:59:59")', 'Stromzaehler', 'OBIS', 'daily_consumption: $CONSUMPTION', 'daily_consumption', $CONSUMPTION, '');"
