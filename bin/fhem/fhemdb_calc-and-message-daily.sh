@@ -14,6 +14,7 @@ PSQL="/usr/bin/psql"
 DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
 
 # Das Datum von gestern und vorgestern berechnen
+TODAY=`date -d "1 day ago" '+%d.%m.%Y'`
 TODAY1=`date -d "1 day ago" '+%Y-%m-%d'`
 TODAY2=`date -d "2 days ago" '+%Y-%m-%d'`
 
@@ -38,7 +39,7 @@ CONSUMPTION=`echo $CONSUMPTION | sed 's/\./,/g'`
 COSTS=`printf "%0.2f\n" $COSTS | sed 's/\./,/g'`
 
 # Nachricht für Telegram zusammensetzen
-MESSAGE="Stromverbrauch $TODAY1: $CONSUMPTION kW/h (ca. $COSTS EUR)"
+MESSAGE="Stromverbrauch $TODAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
 
 # Nachricht über Telegram absetzen
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"
