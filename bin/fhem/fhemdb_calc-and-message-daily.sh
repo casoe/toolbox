@@ -31,6 +31,7 @@ COSTS=`bc <<< "$CONSUMPTION*0.25"`
 # Verbrauch von gestern als zusätzliche Zeile in die Datenbank einfügen (current und history)
 $PSQL -X $DBNAME -t -c "delete from current where reading='daily_consumption';"
 $PSQL -X $DBNAME -t -c "insert into current (timestamp, device, type, event, reading, value, unit) values ('$(date -d "$TODAY1" "+%Y-%m-%d 23:59:59")', 'Stromzaehler', 'OBIS', 'daily_consumption: $CONSUMPTION', 'daily_consumption', $CONSUMPTION, '');"
+$PSQL -X $DBNAME -t -c "delete from history where reading='daily_consumption' and timestamp >= '$TODAY1';"
 $PSQL -X $DBNAME -t -c "insert into history (timestamp, device, type, event, reading, value, unit) values ('$(date -d "$TODAY1" "+%Y-%m-%d 23:59:59")', 'Stromzaehler', 'OBIS', 'daily_consumption: $CONSUMPTION', 'daily_consumption', $CONSUMPTION, '');"
 
 # Bei Kosten und Verbrauch den Punkt (Decimal) durch Komma ersetzen
@@ -43,3 +44,4 @@ MESSAGE="Stromverbrauch $TODAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
 
 # Nachricht über Telegram absetzen
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"
+
