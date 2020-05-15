@@ -23,7 +23,7 @@ rm -f $LOG
 exec > >(tee -ia $LOG)
 exec 2>&1
 
-# Startzeit speichern
+### Startzeit speichern
 START=$(date +%s)
 
 ### NAS mounten
