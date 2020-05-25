@@ -5,8 +5,10 @@
 # set -x
 
 # Historie
-# 2020-01-06 Umstellung auf neue Ordnerstruktur und Sync mit dem NAS statt mit OSMC
-# 2020-01-07 Stoppen der Zeit ergänzt
+# 06.01.2020 Umstellung auf neue Ordnerstruktur und Sync mit dem NAS statt mit OSMC
+# 07.01.2020 Stoppen der Zeit ergänzt
+# 23.05.2020 Fix in Bezug auf mount mit sudo
+# 25.05.2020 Fix an Permissions-Error für rsync; delete backups older than 14 days locally
 
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
@@ -37,18 +39,29 @@ $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 echo "Wiederherstellen: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET" >> $LOG 2>&1
 
 ### Archivieren des Skripts und der Config-Dateien
-$ZIP -rv $ZIPTARGET /home/pi/bin/fhem-backup.sh >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/fhem.cfg >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/db.conf >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /home/pi/.bash_history >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/www/gplot/myPlot*.gplot >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET /opt/fhem/www/tablet/index.html >> $LOG 2>&1
+
+### Rotation: Delete backups older than 14 days locally
+echo "### Rotation: Delete backups older than 5 days"
+### For the sake of comprehensiveness try to delete everything from today -15 to today -30
+### days
+for DAYBACK in {15..30}; do
+	DATEBACK=$(date --date "- $DAYBACK day" +%F)
+	rm -rf /home/pi/backup/db/db_backup_$DATEBACK*
+	rm -rf /home/pi/backup/conf/fhem_backup_$DATEBACK*
+	rm -rf /home/pi/backup/log/db_backup_$DATEBACK*
+done
 
 ### rsync zum NAS
 if [ ! $(mount | grep -o /mnt/backup ) ]; then
-  mount /mnt/backup
+  sudo mount /mnt/backup
 fi
-sudo $RSYNC -avht --update /home/pi/backup/ /mnt/backup/hades/fhem  >> $LOG 2>&1
-umount /mnt/backup
+sudo $RSYNC -avht --update --no-o --no-g --no-perms /home/pi/backup/ /mnt/backup/hades/fhem  >> $LOG 2>&1
+sudo umount /mnt/backup
 
 ### Backup-Zeit ausgeben
 echo Backup time: `date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S"` >> $LOG 2>&1

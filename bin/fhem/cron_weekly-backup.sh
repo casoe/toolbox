@@ -8,6 +8,7 @@
 # 20.02.2020 Erste konsolidierte Version, soll einmal die Woche laufen (Backupzeit bei Test im Bereich von 8 min)
 # 22.02.2020 Verschiedene Fixes und Optimierungen nach dem ersten Lauf über crontab
 # 03.05.2020 Umstellung Logging und Versand des Logfiles per Mail am Ende hinzugefügt
+# 23.05.2020 Fix in Bezug auf mount mit sudo
 
 RASPIBACKUP=/usr/local/bin/raspiBackup.sh
 TODAY=`date +"%Y-%m-%d"`
@@ -29,7 +30,7 @@ START=$(date +%s)
 ### NAS mounten
 log NAS mounten
 if [ ! $(mount | grep -o /mnt/backup ) ]; then
-  mount /mnt/backup
+  sudo mount /mnt/backup
 fi
 
 ### Postgres-DB stoppen und Backup des Gesamtsystems durchführen
@@ -48,7 +49,7 @@ log Größen der bisherigen Backups anzeigen
 sudo du -sm /mnt/backup/hades/hades-rsync-backup-* >> $LOG 2>&1
 
 ### NAS unmounten
-umount /mnt/backup >> $LOG 2>&1
+sudo umount /mnt/backup >> $LOG 2>&1
 
 ### Backup-Zeit ausgeben
 echo Backup time: `date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S"` >> $LOG 2>&1
