@@ -1,5 +1,5 @@
 #!/bin/bash
-# fhem-backup.sh
+# cron_daily-backup.sh
 # Carsten Söhrens, 25.05.2017
 
 # set -x
@@ -31,7 +31,8 @@ log() {
 	echo "[$(date +%Y-%m-%d\ %H:%M:%S)]: $*" >> $LOG 2>&1
 }
 
-### Startzeit speichern
+### Log öffnen und Startzeit speichern
+log "INFO" "Start von $0"
 START=$(date +%s)
 
 ### Löschen von Einträgen für Power, die älter als 7 Tage sind
@@ -49,17 +50,18 @@ log "INFO" "Dump der Postgres-Datenbank"
 $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 
 ### Wiederherstellen-Hinweis im Logfile
-log "INFO" "Wiederherstellen: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
+log "INFO" "Wiederherstellen mit pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
 
 ### Archivieren des Skripts und der Config-Dateien
+log "INFO" "Archivieren der relevanten Config-Dateien"
 $ZIP -rv $ZIPTARGET /opt/fhem/fhem.cfg >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/db.conf >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /home/pi/.bash_history >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/www/gplot/myPlot*.gplot >> $LOG 2>&1
 $ZIP -rv $ZIPTARGET /opt/fhem/www/tablet/index.html >> $LOG 2>&1
 
-### Delete everything locally from today -15 to today -30 days
-log "INFO" "Delete everything locally from today -15 to today -30 days"
+### Löschen aller lokalen Dateien von Tag -15 bis -30
+log "INFO" "Löschen aller lokalen Dateien von Tag -15 bis -30"
 for DAYBACK in {15..30}; do
 	DATEBACK=$(date --date "- $DAYBACK day" +%F)
 	rm -rf /home/pi/backup/db/db_backup_$DATEBACK*
@@ -67,8 +69,8 @@ for DAYBACK in {15..30}; do
 	rm -rf /home/pi/backup/log/db_backup_$DATEBACK*
 done
 
-### rsync zum NAS
-log "INFO" "rsync zum NAS"
+### rsync der lokalen Backup-Daten zum NAS
+log "INFO" "rsync der lokalen Backup-Daten zum NAS"
 if [ ! $(mount | grep -o /mnt/backup ) ]; then
   sudo mount /mnt/backup
 fi
