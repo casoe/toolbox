@@ -10,6 +10,7 @@
 # 23.05.2020 Fix in Bezug auf mount mit sudo
 # 25.05.2020 Fix an Permissions-Error für rsync; delete backups older than 14 days locally
 # 26.05.2020 Logging angepasst
+# 28.05.2020 Bugfix am Logging (> statt >>)
 
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
@@ -37,7 +38,7 @@ START=$(date +%s)
 
 ### Löschen von Einträgen für Power, die älter als 7 Tage sind
 log "INFO" "Löschen von Einträgen für Power, die älter als 7 Tage sind"
-$PSQL $DBNAME << EOF > $LOG 2>&1
+$PSQL $DBNAME << EOF >> $LOG 2>&1
 delete from history where reading='ENERGY_Power' and (timestamp < now() - interval '7 days');
 delete from history where reading='power' and (timestamp < now() - interval '7 days');
 delete from history where type='SYSSTAT' and (timestamp < now() - interval '30 days');
