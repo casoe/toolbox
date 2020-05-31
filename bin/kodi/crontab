@@ -21,4 +21,4 @@
 # 
 # m  h  dom mon dow   command
 
- 00 01  *   *   *     /home/osmc/bin/kodi-nasrsync.sh > /home/osmc/log/kodi-nasrsync.log
+ 00 01  *   *   *     /home/osmc/bin/kodi-nasrsync.sh > /dev/null
