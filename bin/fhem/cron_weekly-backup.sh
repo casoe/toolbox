@@ -2,7 +2,7 @@
 # hades-backup.sh
 # Carsten Söhrens, 20.02.2020
 
-# set -x
+ set -x
 
 # Historie
 # 20.02.2020 Erste konsolidierte Version, soll einmal die Woche laufen (Backupzeit bei Test im Bereich von 8 min)
@@ -10,9 +10,11 @@
 # 03.05.2020 Umstellung Logging und Versand des Logfiles per Mail am Ende hinzugefügt
 # 23.05.2020 Fix in Bezug auf mount mit sudo
 # 31.05.2020 Logging angepasst auf die gleiche Funktion wie im daily-backup
+# 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 
-RASPIBACKUP=/usr/local/bin/raspiBackup.sh
-TODAY=`date +"%Y-%m-%d"`
+RASPIBACKUP="/usr/local/bin/raspiBackup.sh"
+MOUNTDIR="/mnt/backup"
+TODAY=$(date +"%Y-%m-%d")
 LOG="/home/pi/backup/log/weekly_backup_$TODAY.log"
 
 ### Funktion zum effizienteren Logging
@@ -29,34 +31,42 @@ log() {
 log "INFO" "Start von $0"
 START=$(date +%s)
 
-### NAS mounten
-log "INFO" "NAS mounten"
-if [ ! $(mount | grep -o /mnt/backup ) ]; then
-  sudo mount /mnt/backup
+### NAS mounten; bei Fehler Abbruch und Mail versenden
+log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
+if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
+  sudo mount $MOUNTDIR >> $LOG 2>&1
+
+	if [ $? -ne 0 ]; then
+	{
+		cat $LOG |mail -s "ERROR $0" soehrens@gmail.com
+		exit 1;
+	}
+	fi;
 fi
 
 ### Postgres-DB stoppen und Backup des Gesamtsystems durchführen
-log "INFO" "Postgres-DB stoppen und Backup des Gesamtsystems durchführen"
+log "INFO" "Postgres stoppen"
 sudo systemctl stop postgresql >> $LOG 2>&1
 sudo systemctl status postgresql >> $LOG 2>&1
+log "INFO" "Backup des Gesamtsystems durch raspiBackup durchführen"
 sudo $RASPIBACKUP -a : -o : -m minimal >> $LOG 2>&1
 
 ### Restart Postgres und Backup-Mount aushängen
-log "INFO" "Restart Postgres und Backup-Mount aushängen"
+log "INFO" "Postgres starten"
 sudo systemctl start postgresql >> $LOG 2>&1
 sudo systemctl status postgresql >> $LOG 2>&1
 
 ### Größen der bisherigen Backups anzeigen
 log "INFO" "Größen der bisherigen Backups anzeigen"
-sudo du -sm /mnt/backup/hades/hades-rsync-backup-* >> $LOG 2>&1
+sudo du -sm /mnt/backup/hades/* >> $LOG 2>&1
 
 ### NAS unmounten
 log "INFO" "NAS unmounten"
-sudo umount /mnt/backup >> $LOG 2>&1
+sudo umount $MOUNTDIR >> $LOG 2>&1
 
 ### Backup-Zeit ausgeben
 log "INFO" "Backup-Zeit ausgeben"
-echo Backup time: `date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S"` >> $LOG 2>&1
+echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S") >> $LOG 2>&1
 
 ### Log per Mail versenden
 log "INFO" "Log per Mail versenden"

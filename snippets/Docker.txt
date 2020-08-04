@@ -1,0 +1,149 @@
+ 1275  curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
+ 1276  sudo add-apt-repository        "deb https://apt.dockerproject.org/repo/ \
+ 1279  echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+ 1280       $(lsb_release -cs) stable" |     sudo tee /etc/apt/sources.list.d/docker.list
+ 1282  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add 
+ 1283  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+ 1285  sudo apt install docker-ce
+ 1286  sudo systemctl enable docker
+ 1287  sudo systemctl start docker
+ 1288  sudo usermod -aG docker pi
+ 1289  docker run hello-world
+ 1290  sudo docker run -d -p 5555:80 -v /home/openhabian/Docker/TasmoAdmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1291  sudo docker ps
+ 1292  docker kill 2e35d7e35477
+ 1293  sudo docker ps
+ 1295  mkdir docker
+ 1296  cd docker/
+ 1300  sudo docker run -d -p 5555:80 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1301  docker remove "/TasmoAdmin"
+ 1302  docker rm "/TasmoAdmin"
+ 1303  sudo docker run -d -p 5555:80 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1304  sudo docker ps
+ 1306  sudo docker ps
+ 1307  sudo docker kill TasmoAdmin
+ 1308  sudo docker run -d -p 5555:81 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1309  sudo docker rm TasmoAdmin
+ 1310  sudo docker run -d -p 5555:81 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1311  sudo docker rm TasmoAdmin
+ 1312  sudo docker kill TasmoAdmin
+ 1313  sudo docker rm TasmoAdmin
+ 1314  docker run -d -p 5555:80 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1319  sudo docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=Portainer --restart=always portainer/portainer
+ 1321  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=TasmoAdmin --restart=always raymondmm/tasmoadmin
+ 1330  docker info
+ 1332  cd docker/tasmoadmin/
+ 1338  docker ps
+ 1340  docker kill 7033f207c5c4
+ 1341  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1342  docker ps
+ 1343  docker kill 171d5050a2bf
+ 1344  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1345  docker kill "7022f246cd29dd18b0c175eea16e899e181170b769e7ce954730986a4b88acad".
+ 1346  docker kill 7022f246cd29dd18b0c175eea16e899e181170b769e7ce954730986a4b88acad
+ 1347  docker ps
+ 1348  docker ps -a
+ 1350  docker images
+ 1351  history |grep "docker run"
+ 1352  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=portainer --restart=always portainer/portainer
+ 1353  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1386  sudo docker run -d -p 5555:80 --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1388  sudo docker run -d -p 80:80 --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1390  cd docker/
+ 1403  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 1446  docker run -d   --name watchtower   -v /var/run/docker.sock:/var/run/docker.sock   v2tec/watchtower
+ 1447  docker images | grep tasmo
+ 1448  docker pull raymondmm/tasmoadmin
+ 1449  docker ps
+ 1450  docker pull portainer/portainer
+ 1452  docker images |grep -v REPOSITORY|awk '{print $1}'|xargs -L1 docker pull 
+ 1453  docker images | grep "<none>" | awk '{print $3}' | xargs -L1 docker rmi
+ 1456  docker ps
+ 1457  docker containers
+ 1458  docker ls
+ 1459  docker show
+ 1461  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=portainer --restart=always portainer/portainer
+ 1462  docker rm portainer
+ 1463  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=portainer --restart=always portainer/portainer
+ 1464  docker ps
+ 1466  docker ps
+ 1468  docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart=always  v2tec/watchtower
+ 1471  docker ps
+ 1472  docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock v2tec/watchtower
+ 1473  docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock talmai/rpi-watchtower
+ 1474  docker run -d   --name watchtower   -v /var/run/docker.sock:/var/run/docker.sock   talmai/rpi-watchtower 6
+ 1476  docker run -d   --name watchtower   -v /var/run/docker.sock:/var/run/docker.sock   talmai/rpi-watchtower 7
+ 1489  docker system prune -f
+ 1492  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower talmai/rpi-watchtower 7 --cleanup --schedule "0 0 4 * * *"
+ 1493  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower talmai/rpi-watchtower--schedule "0 0 4 * * *"
+ 1494  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower talmai/rpi-watchtower --schedule "0 0 4 * * *"
+ 1496  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower talmai/rpi-watchtower --schedule "0 0 4 * * *"
+ 1497  docker stop watchtower && docker rm watchtower
+ 1498  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower --schedule "0 0 4 * * *" talmai/rpi-watchtower
+ 1499  docker run --help
+ 1500  docker --version
+ 1503  sudo nano /etc/apt/sources.list.d/docker.list 
+ 1509  apt-cache madison docker-ce
+ 1510  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --name watchtower --schedule "0 0 4 * * *" talmai/rpi-watchtower
+ 1512  docker stop watchtower && docker rm watchtower
+ 1513  docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name watchtower talmai/rpi-watchtower 7
+ 1514  docker run -d  --name Watchtower -v /var/run/docker.sock:/var/run/docker.sock -e schedule="* 30 4 * * *" -e cleanup -e debug -e WATCHTOWER_NOTIFICATIONS=email -e WATCHTOWER_NOTIFICATION_EMAIL_FROM=Watchtower@NAS-Schweinshausen.de -e WATCHTOWER_NOTIFICATION_EMAIL_TO=Bxxxxxxxxxxxxxx@gmail.com -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER=smtp.gmail.com -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_USER=xxxxxxxxxxxxxxxcz@gmail.com -e WATCHTOWER_NOTIFICATION_EMAIL_SERVER_PASSWORD=xxxxxxxxxxxxxxx talmai/rpi-watchtower 7
+ 1515  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock -e schedule="* 30 4 * * *" -e cleanup talmai/rpi-watchtower 7
+ 1516  docker stop watchtower && docker rm watchtower
+ 1517  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped -e schedule="* 30 4 * * *" -e cleanup talmai/rpi-watchtower 7
+ 1532  apt-cache madison docker-ce
+ 1533  docker --version
+ 1536  cat /etc/apt/sources.list.d/docker.list 
+ 1538  docker stop watchtower && docker rm watchtower
+ 1539  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --cleanup --interval 86400 talmai/rpi-watchtower 7
+ 1540  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped --interval 86400 talmai/rpi-watchtower 7
+ 1541  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped talmai/rpi-watchtower 7 --cleanup --interval 86400
+ 1542  docker stop watchtower && docker rm watchtower
+ 1543  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped talmai/rpi-watchtower 7 --cleanup --schedule="* 30 4 * * *"
+ 1544  docker stop watchtower && docker rm watchtower
+ 1545  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped talmai/rpi-watchtower 7 --cleanup --interval 86400 --version
+ 1546  docker stop watchtower && docker rm watchtower
+ 1547  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped talmai/rpi-watchtower 7 --cleanup --interval 86400
+ 1586  docker rm portainer
+ 1587  docker stop portainer
+ 1588  docker rm portainer
+ 1589  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=portainer --restart=always portainer/portainer --no-auth
+ 1770  docker run hello-world
+ 2956  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+ 2957  echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+ 2961  sudo apt install docker-ce
+ 2968  sudo systemctl enable docker
+ 2969  sudo systemctl start docker
+ 2970  sudo usermod -aG docker pi
+ 2971  docker run hello-world
+ 2973  docker run hello-world
+ 3332  cd docker/
+ 3338  sudo nano /usr/share/nano/dockerfile.nanorc
+ 3340  cp /usr/share/nano/dockerfile.nanorc conf-library
+ 3502  curl -fsSL https://download.docker.com/linux/$(. /etc/os-release; echo "$ID")/gpg | sudo apt-key add -
+ 3503  echo "deb [arch=armhf] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
+ 3507  sudo apt install docker-ce --no-install-recommends
+ 3508  sudo usermod -aG docker pi
+ 3509  sudo systemctl enable docker
+ 3510  sudo systemctl start docker
+ 3511  docker run hello-world
+ 3686  history |grep docker
+ 3687  docker run -d -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v /home/pi/docker/portainer/data:/data --name=portainer --restart=always portainer/portainer --no-auth
+ 3688  docker run -d  --name watchtower -v /var/run/docker.sock:/var/run/docker.sock --restart unless-stopped talmai/rpi-watchtower 7 --cleanup --interval 86400
+ 3690  docker run -d -p 80:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 3948  history |grep docker
+ 4074  cd docker/
+ 4146  cd docker/
+ 4223  history |grep docker
+ 5457  history |grep docker
+ 5458  docker run -d -p 8000:80 -v /home/pi/docker/tasmoadmin/data:/data --name=tasmoadmin --restart=always raymondmm/tasmoadmin
+ 5463  nano docker-compose.yml 
+ 5466  git pull https://github.com/pi-hole/docker-pi-hole/blob/master/docker_run.sh
+ 5469  cd docker/
+ 5473  nano docker-compose.yml
+ 5477  # More info at https://github.com/pi-hole/docker-pi-hole/ and https://docs.pi-hole.net/
+ 5480  git clone https://github.com/pi-hole/docker-pi-hole.git
+ 5482  cd docker-pi-hole/
+ 5484  nano docker_run.sh 
+ 5485  ./docker_run.sh 
+ 5588  history |grep docker > Docker.txt

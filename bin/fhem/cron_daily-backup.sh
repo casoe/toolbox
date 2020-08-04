@@ -11,6 +11,7 @@
 # 25.05.2020 Fix an Permissions-Error für rsync; delete backups older than 14 days locally
 # 26.05.2020 Logging angepasst
 # 28.05.2020 Bugfix am Logging (> statt >>)
+# 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
@@ -21,6 +22,7 @@ LOG="/home/pi/backup/log/db_backup_$TODAY.log"
 DBTARGET="/home/pi/backup/db/db_backup_$TODAY.sqlc"
 ZIPTARGET="/home/pi/backup/conf/fhem_backup_$TODAY.zip"
 RSYNC="/usr/bin/rsync"
+MOUNTDIR="/mnt/backup"
 
 ### Funktion zum effizienteren Logging
 log() {
@@ -70,13 +72,24 @@ for DAYBACK in {15..30}; do
 	rm -rf /home/pi/backup/log/db_backup_$DATEBACK*
 done
 
+### NAS mounten; bei Fehler Abbruch und Mail versenden
+log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
+if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
+  sudo mount $MOUNTDIR >> $LOG 2>&1
+	
+	if [ $? -ne 0 ]; then
+	{
+		cat $LOG |mail -s "ERROR $0" soehrens@gmail.com
+		exit 1;
+	}
+	fi;
+fi
+
 ### rsync der lokalen Backup-Daten zum NAS
 log "INFO" "rsync der lokalen Backup-Daten zum NAS"
-if [ ! $(mount | grep -o /mnt/backup ) ]; then
-  sudo mount /mnt/backup
-fi
-sudo $RSYNC -avht --update --no-o --no-g --no-perms /home/pi/backup/ /mnt/backup/hades/fhem  >> $LOG 2>&1
-sudo umount /mnt/backup
+sudo $RSYNC -avht --update --no-o --no-g --no-perms /home/pi/backup/ $MOUNTDIR/hades/fhem  >> $LOG 2>&1
+
+sudo umount $MOUNTDIR
 
 ### Backup-Zeit ausgeben
 log "INFO" "Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S")"
