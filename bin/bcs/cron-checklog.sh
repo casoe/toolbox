@@ -1,13 +1,12 @@
 #!/bin/bash
-# Name : bcs-checklog.sh
 # Autor: Carsten Söhrens
 
 FULLDATE=`date +\%Y-\%m-\%d`
-BCSLOGDIR="/opt/projektron/bcs/server/log"
+BCSLOGDIR="/opt/projektron/bcs/server/log/inform_cron"
 
 ### Suche nach erschöpften Lizenzen aus dem Pool
 ### daily-check.log wird geleert bzw. neu begonnen
-grep $FULLDATE $BCSLOGDIR/logins.log |grep 'internal.LicenseTracker WARN' > $BCSLOGDIR/daily-check.log
+grep $FULLDATE $BCSLOGDIR/../cti.log |grep 'exhausted' > $BCSLOGDIR/daily-check.log
 
 ### Check auf fehlende Personalnummern in Monlist beim Export/Upload der Daten
 if grep -q 'Kein Personaleintrag gefunden' $BCSLOGDIR/daily-export-bcs2monlist.log; then
@@ -39,4 +38,7 @@ USAGE=$(du $BCSLOGDIR/daily-check.log | awk 'NR==1{print $1}')
 ### Wenn etwas drin steht (Filegröße größer 0), dann per Email an bcs-support senden
 if [ $USAGE -gt "0" ]; then
 	cat $BCSLOGDIR/daily-check.log | mail -E -s "[Alert] BCS Checklog enthaelt Meldungen" "bcs-support@inform-software.com"
+	#cat $BCSLOGDIR/daily-check.log | mail -E -s "[Alert] BCS Checklog enthaelt Meldungen" "carsten.soehrens@inform-software.com"
+	#cat $BCSLOGDIR/daily-check.log | mutt -s "[Alert] BCS Checklog enthaelt Meldungen" -e "set crypt_use_gpgme=no" -- "bcs-support@inform-software.com"
+
 fi

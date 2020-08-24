@@ -1,6 +1,7 @@
 #!/bin/bash
-# Name : Export der Ist-Sachkosten in eine csv-Datei für DATEV
+# Zweck: Export der Ist-Sachkosten in eine csv-Datei für DATEV
 # Autor: Jan-Michael Regulski
+
 exec > /opt/projektron/bcs/export/EffortFixed_ExportSplitMail.log 2>&1
 
 SCRIPT="export-effortsfixed-datev-gb30.sh"

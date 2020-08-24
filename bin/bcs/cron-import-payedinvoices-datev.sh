@@ -8,27 +8,30 @@
 
 PYTHON="/usr/bin/python3"
 
-SUPPORTMAIL="jan-michael.regulski@inform-software.com"
+SUPPORTMAIL="bcs-support@inform-software.com"
 
 SCRIPT="import-payedinvoices-datev-gb30.sh"
 BCSHOME="/opt/projektron/bcs/server"
 BCSIMPORT="/opt/projektron/bcs/import"
 SOURCEDIR="Global/GB30"
 TARGETDIR="/opt/projektron/bcs/datev/archiv-bezahlte-rechnungen"
+SCRIPDIR="inform_scripts"
 MOUNTDIR="/mnt/dfs"
 
 exortfileprefix="AllePosten"
 FULLDATE=$(date +"%Y-%-m-%-d")
 FULLTIME=$(date +"%H-%M")
 
+mountcheck="false"
 ###Umlenken aller Ausgaben/Fehler in eine Datei
 exec > $BCSIMPORT/$exortfileprefix$FULLDATE-$FULLTIME.log
 exec 2>&1
 
 ### Mount DFS volume (if not alredy available), if problem send mail and abort
-if ! [[ $(findmnt -M "$MOUNTDIR/Global") ]]; then
+if ! [[ $(findmnt -M "$MOUNTDIR") ]]; then
     echo "Mounten von //INFORM/files..."
     mount -v -t cifs //intern.inform-software.com/files $MOUNTDIR -o vers=3.0,rw,credentials=/root/.cifs,noserverino
+    mountcheck="true"
 fi
 if [ $? -ne 0 ]; then
 {
@@ -42,7 +45,7 @@ fi;
 if [ -f $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx ] ; then
 
     test_input=$(stat -c %y $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx)
-    test_backup=$(cat $BCSIMPORT/.timestamp_AllePosten)
+    test_backup=$(cat $TARGETDIR/.timestamp_AllePosten)
     ###Test, ob Datei sich geändert hat
     if ! [ "$test_input" == "$test_backup" ] ; then
 
@@ -51,7 +54,7 @@ if [ -f $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx ] ; then
         cp -f -v -a $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx $BCSIMPORT
 
         ###Sichern des neuen Datums
-        stat -c %y $BCSIMPORT/$exortfileprefix.xlsx > $BCSIMPORT/.timestamp_AllePosten
+        stat -c %y $BCSIMPORT/$exortfileprefix.xlsx > $TARGETDIR/.timestamp_AllePosten
 
         ###Konvertieren der Import-Exceldatei nach CSV
         echo "Konvertieren der Quelldatei nach CSV..."
@@ -59,7 +62,7 @@ if [ -f $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx ] ; then
 
         ###Analysieren der Zahlungen durch Gruppierung nach Rechnungsnummer
         echo "ETL der Quelldatei..."
-        $PYTHON GroupInvoicesByNumber.py $BCSIMPORT/$exortfileprefix.csv $BCSIMPORT/$exortfileprefix-aggregated.csv
+        $PYTHON $BCSHOME/$SCRIPDIR/GroupInvoicesByNumber.py $BCSIMPORT/$exortfileprefix.csv $BCSIMPORT/$exortfileprefix-aggregated.csv
 
         ### Import anstoßen
         echo "Starte Import..."
@@ -81,6 +84,11 @@ if [ -f $MOUNTDIR/$SOURCEDIR/$exortfileprefix.xlsx ] ; then
 
 else
     echo "Keine AllePosten-Datei zum Kopieren vorhanden"
+fi
+
+if [ "$mountcheck" == "true" ] ; then
+  ### DFS wieder aushängen, wenn in Script eingehängt
+  umount /mnt/dfs
 fi
 
 echo ...Fertig

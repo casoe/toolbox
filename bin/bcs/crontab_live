@@ -22,12 +22,8 @@
 # m h  dom mon dow   command
 
 # LDAP-import data into Projektron BCS every weekday at night (00:30 hrs) and 12:00 hrs
-  30 00 *   *   1-5   /opt/projektron/bcs/server/bin/LDAPImport.sh > /opt/projektron/bcs/server/log/daily-import-ad2bcs.log 2>&1
-  00 12 *   *   1-5   /opt/projektron/bcs/server/bin/LDAPImport.sh >> /opt/projektron/bcs/server/log/daily-import-ad2bcs.log 2>&1
-
-# Run monlist interface every weekday at 21:30 hrs (bcs-export) and 21:45 hrs (monlist-import)
-  30 21 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-export-bcs2monlist-step1.sh > /opt/projektron/bcs/server/log/daily-export-bcs2monlist.log 2>&1
-  45 21 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-export-bcs2monlist-step2.sh >> /opt/projektron/bcs/server/log/daily-export-bcs2monlist.log 2>&1
+  30 00 *   *   1-5   /opt/projektron/bcs/server/bin/LDAPImport.sh > /opt/projektron/bcs/server/log/inform_cron/daily-import-ad2bcs.log 2>&1
+  00 12 *   *   1-5   /opt/projektron/bcs/server/bin/LDAPImport.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-import-ad2bcs.log 2>&1
 
 # Run daily backup script incl. rollover at 22:00 hrs
   55 21 *   *   *     /opt/projektron/bcs/server/bin/AdminMessage.sh "System shutting down for daily backup in 5 minutes, please save your work in time." > /dev/null 2>&1
@@ -35,41 +31,48 @@
   57 21 *   *   *     /opt/projektron/bcs/server/bin/AdminMessage.sh "System shutting down for daily backup in 3 minutes, please save your work in time." > /dev/null 2>&1
   58 21 *   *   *     /opt/projektron/bcs/server/bin/AdminMessage.sh "System shutting down for daily backup in 2 minutes, please save your work in time." > /dev/null 2>&1
   59 21 *   *   *     /opt/projektron/bcs/server/bin/AdminMessage.sh "System shutting down for daily backup in 1 minute, please save your work in time." > /dev/null 2>&1
-  00 22 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-backup.sh > /dev/null 2>&1
+  00 22 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-backup.sh > /dev/null 2>&1
 
 # Run daily check of the bcs-application.log (e.g. for exhausted license pools) at 23:45 hrs
-  45 23 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-checklog.sh >> /opt/projektron/bcs/server/log/daily-check.log 2>&1
+  45 23 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-checklog.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-check.log 2>&1
 
-# Run daily exchangerate import at 18:00 hrs (EZB deploys exchange rates at 16:00 hrs)
-  00 18 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-import-exchangerates.sh > /opt/projektron/bcs/server/log/daily-import-exchangerates.log 2>&1
+# Run monlist interface every weekday at 21:30 hrs (bcs-export) and 21:45 hrs (monlist-import)
+  30 21 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2monlist-step1.sh >  /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2monlist.log 2>&1
+  45 21 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2monlist-step2.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2monlist.log 2>&1
 
-# Run daily export of data to the different dashboard databases at 01:00 hrs
-  00 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-export-bcs2ods.sh > /opt/projektron/bcs/server/log/daily-export-bcs2ods.log 2>&1
+# Run daily export of data to the different ODS/dashboard databases at 01:00 hrs
+  00 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2ods.log 2>&1
 
-# Run daily data-integration of data from monlist to the ods at 01:30 hrs
-  30 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-export-pdi2ods.sh > /opt/projektron/bcs/server/log/daily-export-pdi2ods.log 2>&1
-
-# Import INFORM CRM/inxmail Blacklist data into Projektron BCS every day at night (00:35 hrs) and 12:05 hrs
-  35 00 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-import-blacklist.sh > /opt/projektron/bcs/server/log/daily-import-blacklist.log 2>&1
-  05 12 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-import-blacklist.sh >> /opt/projektron/bcs/server/log/daily-import-blacklist.log 2>&1
-
-# Run daily data-export of the project responsibilities at 04:00 hrs
-  00 04 *   *   *     /opt/projektron/bcs/server/inform_scripts/daily-export-project-responsibilities.sh > /opt/projektron/bcs/server/log/daily-export-project-responsibilities.log 2>&1
-
-# Run hourly data-export of acquitions in ods30 and ods70 (only between 7 and 22 hrs)
-  55 6-21 *   *   *   /opt/projektron/bcs/server/inform_scripts/hourly-export-bcs2ods-acquisitions.sh >> /opt/projektron/bcs/server/log/hourly-export-bcs2ods-acquisitions.log 2>&1
-
-# Datev-BCS: daily data import of the payed invoices from datev (provided by GB80) at 20:00 hrs
-  #00 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/import-payedinvoices-datev-gb30.sh > /opt/projektron/bcs/server/log/import-payedinvoices-datev-gb30.log 2>&1
+# Run hourly data-export of acquitions in ods30 and ods70 (only between 0600 and 2155 hrs)
+  00 6    *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-acquisitions.sh > /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-acquisitions.log 2>&1
+  55 6-21 *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-acquisitions.sh >> /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-acquisitions.log 2>&1
 
 # Datev-BCS: daily data export of the unexported invoice items of finished invoices of the current month at 20:30 hrs
-  30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb30-currentmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb30-currentmonth.log 2>&1
-  30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb70-currentmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb70-currentmonth.log 2>&1
+  30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb30-currentmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb30-currentmonth.log 2>&1
+  30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb70-currentmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb70-currentmonth.log 2>&1
 
 # Datev-BCS: single data export of the unexported invoice items of finished invoices of the previous month at 20:30 hrs
-  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb30-previousmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb30-previousmonth.log 2>&1
-  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/export-invoiceitems-datev-gb70-previousmonth.sh > /opt/projektron/bcs/server/log/export-invoiceitems-datev-gb70-previousmonth.log 2>&1
+  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb30-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/export-invoiceitems-datev-gb30-previousmonth.log 2>&1
+  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb70-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/export-invoiceitems-datev-gb70-previousmonth.log 2>&1
+
+# Run daily data-integration of data from monlist to the ods at 01:30 hrs
+  30 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-pdi2ods.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-pdi2ods.log 2>&1
+
+# Run daily data-export of the project responsibilities at 04:00 hrs
+  00 04 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-project-responsibilities.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-project-responsibilities.log 2>&1
+
+# Weekly Export of the Sales Reports and Sync to the DFS at 0600 hrs on Mondays (Reports are generated at 0515 hrs)
+  00 06 *   *   mon   /opt/projektron/bcs/server/inform_scripts/cron-export-salesreports.sh > /opt/projektron/bcs/server/log/inform_cron/weekly-export-salesreports.log 2>&1
+
+# Import INFORM CRM/inxmail Blacklist data into Projektron BCS every day at night (00:35 hrs) and 12:05 hrs
+  35 00 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-import-blacklist.sh > /opt/projektron/bcs/server/log/inform_cron/daily-import-blacklist.log 2>&1
+  05 12 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-import-blacklist.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-import-blacklist.log 2>&1
+
+# Run daily exchangerate import at 18:00 hrs (EZB deploys exchange rates at 16:00 hrs)
+  00 18 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-import-exchangerates.sh > /opt/projektron/bcs/server/log/inform_cron/daily-import-exchangerates.log 2>&1
+
+# Datev-BCS: data import of the payed invoices from datev between 12:00 and 18:00 hrs every 2 hrs (usually provided by GB80 once a week)
+  00 12-18/2 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-import-payedinvoices-datev.sh > /opt/projektron/bcs/server/log/inform_cron/daily-import-payedinvoices-datev.log 2>&1
 
 # Daily Postgres-Maintenance VACUUM and ANALYSE on working days at 02:30 hrs (after ODS-Exports)
-  30 02 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/daily-psql-vacuum-analyze.sh > /opt/projektron/bcs/server/log/daily-psql-vacuum-analyze.log 2>&1
-
+  30 02 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-psql-vacuum-analyze.sh > /opt/projektron/bcs/server/log/inform_cron/daily-psql-vacuum-analyze.log 2>&1

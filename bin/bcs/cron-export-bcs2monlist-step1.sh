@@ -1,5 +1,4 @@
 #!/bin/bash
-# Name : daily-export-bcs2monlist-step1.sh (Export der Daten aus BCS)
 # Autor: Carsten Söhrens
 
 echo Starte Export...

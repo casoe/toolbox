@@ -1,9 +1,8 @@
 #!/bin/bash
-# Name : daily-backup.sh
 # Autor: Carsten Söhrens
 
 ### Setting variables
-SCRIPT="daily-backup.sh"
+SCRIPT=$0
 MACHINE=$(uname -n)
 DBHOST=172.16.1.103
 MOUNTDIR="/mnt/backup"
@@ -12,8 +11,8 @@ PREFIX="bcsbackup_"
 BACKUPCOPY="/opt/projektron/bcs/backup"
 TODAY=$(date +%F)
 YESTERDAY=$(date --date "- 1 day" +%F)
-LOG="$BCSHOME/log/daily-backup.log"
-STATISTICSLOG="$BCSHOME/log/daily-backup-statistics.log"
+LOG="$BCSHOME/log/inform_cron/daily-backup.log"
+STATISTICSLOG="$BCSHOME/log/inform_cron/daily-backup-statistics.log"
 PGDUMP=/usr/bin/pg_dump
 RSYNC=/usr/bin/rsync
 
@@ -22,7 +21,7 @@ rm -f $LOG
 exec > >(tee -ia $LOG)
 exec 2>&1
 
-echo "$TODAY, Daily rollover for new backup started - experimental, db-backup with pg_dump, files with rsync" >> $STATISTICSLOG
+echo "$TODAY, Daily rollover for backup started (pg_dump, rsync)" >> $STATISTICSLOG
 
 ### Stop rollover time
 ROLLOVERSTART=$(date +%s)
@@ -79,15 +78,16 @@ DBSIZE=$(du -sm $BACKUPCOPY/current/db |cut -f1)
 
 ### Rotation: Delete backups older than 5 days
 echo "### Rotation: Delete backups older than 5 days"
-### For the sake of comprehensiveness try to delete everything from today -6 to today -10 days
-for DAYBACK in {6..10}; do
+### For the sake of comprehensiveness try to delete everything from today -5 to today -9 days
+for DAYBACK in {5..9}; do
 	DATEBACK=$(date --date "- $DAYBACK day" +%F)
 	echo "rm -rf $MOUNTDIR/$PREFIX$DATEBACK"
 	rm -rf $MOUNTDIR/$PREFIX$DATEBACK
 done
 
-### Copy log also to the NAS
+### Copy logs also to the NAS
 cp $LOG $MOUNTDIR/$PREFIX$TODAY/
+cp $STATISTICSLOG $MOUNTDIR/
 
 ### Unmount backup volume
 umount $MOUNTDIR

@@ -40,7 +40,8 @@ $PSQL -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables
 
 echo Spiegelung des Data-Verzeichnisses und des DB-Backups vom Live-Server mit rsync
 mkdir -p $BCSHOME/../restore/db
-rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/current/files/ $BCSHOME/data
+rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/files/ $BCSHOME/data/files
+rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/data/FTIndex/ $BCSHOME/data/FTIndex
 rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/db/ $BCSHOME/../restore/db
 
 echo Restore auf DB
@@ -50,8 +51,6 @@ if [[ "$MACHINE" != 'bcs' ]]; then
 	echo "Testserver-Restore: Deactivate Exchange-Synchronisation for all users"
 	$PSQL -c "UPDATE custattr_int SET value=0 WHERE attrib='syncAdapterActive';"
 fi
-
-
 
 $BCSHOME/bin/Restore.sh -rmserverid
 

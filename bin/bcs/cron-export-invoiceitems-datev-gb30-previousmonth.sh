@@ -1,5 +1,5 @@
 #!/bin/bash
-# Name : Export der Rechnungspositionen in eine csv-Datei für DATEV
+# Zweck: Export der Rechnungspositionen in eine csv-Datei für DATEV
 # Autor: Jan-Michael Regulski
 
 SCRIPT="export-invoiceitems-datev-gb30-previousmonth.sh"

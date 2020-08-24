@@ -2,6 +2,8 @@
 # Name : next-copyfromlive.sh
 # Autor: Carsten Söhrens
 
+# set -x
+
 ### Überprüfe, auf welcher Maschine das Skript ausgeführt wird
 ### Abbruch, sofern es sich um das Live-System handelt
 MACHINE=`uname -n`
@@ -40,7 +42,8 @@ $PSQL -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables
 
 echo Spiegelung des Data-Verzeichnisses und des DB-Backups vom Live-Server mit rsync
 mkdir -p $BCSHOME/../restore/db
-rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/current/files/ $BCSHOME/data
+rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/files/ $BCSHOME/data/files
+rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/data/FTIndex/ $BCSHOME/data/FTIndex
 rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/db/ $BCSHOME/../restore/db
 
 echo Restore auf Next-DB

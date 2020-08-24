@@ -15,7 +15,7 @@ rm -f /opt/projektron/bcs/export/${FULLDATE}.tmp
 ### Laden der Daten über monapi und Schreiben eines Log-Files
 cd /opt/projektron/bcs/monlist
 monapi import /opt/projektron/bcs/export/${FULLDATE}.json >> $LOGFILE
-cat $LOGFILE >> /opt/projektron/bcs/server/log/daily-export-bcs2monlist.log
+cat $LOGFILE >> /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2monlist.log
 
 ### Archivieren der erzeugten Dateien
 cd /opt/projektron/bcs/export/

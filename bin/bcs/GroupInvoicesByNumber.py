@@ -60,7 +60,7 @@ class GroupInvoices:
             df3 = pd.merge(df, df2, how='left', left_on=fields[0], right_index=True)#Neuer Dataframe mit allen Daten
 
             #Filtern auf Bank- und Zusatzkonten, dadurch nur Erfassung eingegangener Buchungen; zusaetzlich keine Guthaben 
-            df3 = df3[(df3[fields[3]].isin(ErlaubteZusatzkonten) | ((df3[fields[3]] <= 12999) & (df3[fields[3]] > 12000))) & (df3[fields[4]] != "H")]
+            df3 = df3[(df3[fields[3]].isin(ErlaubteZusatzkonten) | ((df3[fields[3]] <= 12999) & (df3[fields[3]] >= 12000))) & (df3[fields[4]] != "H")]
 
             #Gruppierung pro Rechnungsnummer fuer einmalige Ausgabe
             Group = df3.groupby(fields[0])

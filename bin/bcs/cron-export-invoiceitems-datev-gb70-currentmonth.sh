@@ -1,14 +1,14 @@
 #!/bin/bash
-# Name : Export der Rechnungspositionen in eine csv-Datei für DATEV
+# Zweck: Export der Rechnungspositionen in eine csv-Datei für DATEV
 # Autor: Jan-Michael Regulski
 
-SCRIPT="export-invoiceitems-datev-gb30-currentmonth.sh"
+SCRIPT="export-invoiceitems-datev-gb70-currentmonth.sh"
 BCSHOME="/opt/projektron/bcs/server"
 BCSEXPORT="/opt/projektron/bcs/export"
 BCSARCHIV="/opt/projektron/bcs/datev"
 
-exortfileprefix="BCS2DATEV_InvoiceItems_AktuellerMonat_gb30_"
-schedulerdef="CSV_DATEV_InvoiceItems_GB3_CurrentMonth-INFORM-Cronjob"
+exortfileprefix="BCS2DATEV_InvoiceItems_AktuellerMonat_gb70_"
+schedulerdef="CSV_DATEV_InvoiceItems_GB7_CurrentMonth-INFORM-Cronjob"
 gb30sekmail="GB30-SEK@inform-software.com"
 
 FULLDATE=$(date +"%Y-%-m-%-d")

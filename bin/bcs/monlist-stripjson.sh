@@ -10,7 +10,7 @@ fi
 
 ### Allgemeine Variablen
 TODAY=`date +"%d.%m.%Y"`
-STARTDATE="2019-07-01"
+source monlist-startdate.cfg
 MONTHS=$(( (`date +%Y`-`date -d $STARTDATE +"%Y"`)*12 + `date +%-m`-`date -d $STARTDATE +"%-m"`))
 WORKDIR=/opt/projektron/bcs/monlist
 
