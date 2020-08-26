@@ -1,0 +1,26 @@
+# Swappartition identifizieren
+fdisk -l
+
+# Swap deaktivieren, ggf. rebooten für Leeren des Swap-Memories
+swapoff /dev/sdXX
+
+# Swap-Partition mit fdisk entfernen
+fdisk /dev/sda
+
+# File mit 1GB Größe erzeugen
+dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+
+# File mit 6GB Größe erzeugen
+dd if=/dev/zero of=/swapfile bs=1024 count=6291456
+
+# Swapfile formatieren, empfohlene Rechte setzen und aktivieren
+mkswap /swapfile
+chmod 0600 /swapfile
+swapon /swapfile
+
+# To verify if the new swap file is in use, run
+swapon -s
+
+# Konfiguration an fstab anhängen 
+echo "/swapfile none    swap    sw      0       0" >> /etc/fstab
+

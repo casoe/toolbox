@@ -1,0 +1,15 @@
+# Vorhandene Partition über fdisk löschen und neu anlegen (einfach drüber schreiben
+fdisk /dev/sda
+
+# Bei der Rückfrage, ob die Ext4-Signatur gelöscht werden soll, nein sagen
+N
+
+# fstab und UUID-checken, damit der initiale Mount funktioniert
+blkid
+cat /etc/fstab
+
+# Reboot damit das Betriebssystem dies merkt
+reboot
+
+# Resize des Filesystems auf der Partition
+resize2fs /devsda1
