@@ -69,5 +69,5 @@ log "INFO" "Backup-Zeit ausgeben"
 echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S") >> $LOG 2>&1
 
 ### Log per Mail versenden
-log "INFO" "Log per Mail versenden"
-cat $LOG | mail -s "Hades (FHEM) Weekly Backup" soehrens@gmail.com
+#log "INFO" "Log per Mail versenden"
+#cat $LOG | mail -s "Hades (FHEM) Weekly Backup" soehrens@gmail.com
