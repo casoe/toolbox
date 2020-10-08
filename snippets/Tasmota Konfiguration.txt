@@ -4,14 +4,15 @@
 - Sonstige Konfiguration: Friendly Name setzen (siehe unten)
 - Über FHEM das attrTemplate "tasmota_set_lowercase_texts_and_state1" einspielen
 
-# Tasmota-Steckdosen im Einsatz (Stand: 05.01.2020)
-  Nr | Friendly name          | Typ            | Template           | MQTT-Topic      | IP (DHCP)
+# Tasmota-Steckdosen im Einsatz (Stand: 08.10.2020)
+# Die Reihenfolge entspricht dem Kaufdatum/Lebensalter
+  Pos| Friendly name          | Typ            | Template           | MQTT-Topic      | IP (DHCP)
   --------------------------------------------------------------------------------------------------
-  01 | Bügeleisen             | OBI WLAN-Dose  | Obi Socket (51)    | obi-wlan1       | 192.168.2.47
+  01 | Umwälzpumpe            | OBI WLAN-Dose  | Obi Socket (51)    | obi-wlan1       | 192.168.2.47
   02 | Fernseher & Peripherie | Sonoff POW1    | Sonoff Pow (6)     | sonoff-pow1     | 192.168.2.36
   03 | Computer & Peripherie  | Sonoff POW1    | Sonoff Pow (6)     | sonoff-pow2     | 192.168.2.50
-  04 | Synology NAS           | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-01 | 192.168.2.35
-  05 | Zirkulationspumpe      | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-02 | 192.168.2.66
+  04 | Synology NAS           | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-01 | 192.168.2.65
+  05 | Bügeleisen             | Gosund SP111   | Blitzwolf SHP (45) | gosund-sp111-02 | 192.168.2.66
   06 | Waschmaschine          | Gosund SP111 A | siehe unten        | gosund-sp111-03 | 192.168.2.67
   07 | Trockner               | Sonoff SP111 A | siehe unten        | gosund-sp111-04 | 192.168.2.68
 
@@ -38,3 +39,9 @@ TelePeriod 60
 
 # Switch relay(s) to their last saved state (default)
 PowerOnState 3
+
+# Das erste, was man bei Wi-Fi-Problemen ausprobieren sollte: , wodurch nur die Wi-Fi-Kalibrierungsdaten
+# gelöscht werden und die Konfiguration intakt bleibt. Vergewissern Sie sich, dass der Energiezyklus danach neu
+# gestartet wird. Wenn das nicht hilft, versuchen Sie auch den Router neu zu starten.
+# Nach dem Reset sollte die Steckdose einmal vom Strom getrennt werden (Power Cycle).
+Reset 3
