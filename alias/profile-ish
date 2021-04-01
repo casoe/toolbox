@@ -1,0 +1,13 @@
+# some more ls aliases
+alias ll='ls -l'
+alias la='ls -A'
+alias l='ls -CF'
+
+# some git aliases
+alias gs='git status'
+alias gc='git checkout'
+alias gl='git log'
+
+# some environment variables
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;31m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w \$\[\033[00m\] '
+PATH="$PATH:~/bin";export PATH

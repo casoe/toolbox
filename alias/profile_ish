@@ -1,7 +1,0 @@
-alias ll='ls -l'
-alias la='la -la'
-alias l='ls'
-
-alias gs='git status'
-alias gc='git checkout'
-alias gl='git log'
