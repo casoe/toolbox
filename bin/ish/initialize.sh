@@ -1,7 +1,7 @@
 ### Pakete nachinstallieren
 apk update 
 apk upgrade
-apk add curl git nano openssh
+apk add curl git nano openssh less
 
 ### git Konfiguration setzen
 # Who am I
@@ -13,6 +13,7 @@ git config --global core.editor "nano"
 
 # colorful output
 git config --global --add color.ui true
+git config --global core.pager 'less -R'
 
 # Enable helper to temporarily store passwords in memory
 git config --global credential.helper cache
