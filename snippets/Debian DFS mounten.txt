@@ -6,7 +6,7 @@ apt-get install cifs-utils keyutils
 mkdir -p /mnt/dfs
 
 ### Login-Credentials in Datei pipen
-echo $'username=svc-bcs-files\npassword=GU|qx-SaK%H$0HH#' > /root/.cifs
+echo $'username=svc-bcs-files\npassword=GEHEIM' > /root/.cifs
 
 ### Danach testweise mounten
 mount -v -t cifs //sv00002.intern.inform-software.com/files /mnt/dfs/ -o rw,credentials=/root/.cifs

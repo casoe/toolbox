@@ -10,6 +10,9 @@ fdisk /dev/sda
 # File mit 1GB Größe erzeugen
 dd if=/dev/zero of=/swapfile bs=1024 count=1048576
 
+# File mit 2GB Größe erzeugen
+dd if=/dev/zero of=/swapfile bs=1024 count=2097152
+
 # File mit 6GB Größe erzeugen
 dd if=/dev/zero of=/swapfile bs=1024 count=6291456
 

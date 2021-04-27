@@ -1,4 +1,4 @@
-# Vorhandene Partition über fdisk löschen und neu anlegen (einfach drüber schreiben
+# Vorhandene Partition über fdisk löschen und neu anlegen (einfach drüber schreiben)
 fdisk /dev/sda
 
 # Bei der Rückfrage, ob die Ext4-Signatur gelöscht werden soll, nein sagen
@@ -12,4 +12,4 @@ cat /etc/fstab
 reboot
 
 # Resize des Filesystems auf der Partition
-resize2fs /devsda1
+resize2fs /dev/sda1
