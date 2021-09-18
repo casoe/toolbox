@@ -1,4 +1,8 @@
 ### Pakete nachinstallieren
+echo https://dl-cdn.alpinelinux.org/alpine/v3.14/main >> /etc/apk/repositories
+echo https://dl-cdn.alpinelinux.org/alpine/v3.14/community >> /etc/apk/repositories
+sed -i -e '/http:\/\/apk.ish.app/d' /etc/apk/repositories 
+
 apk update 
 apk upgrade
 apk add curl git nano openssh less
