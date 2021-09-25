@@ -1,15 +1,11 @@
-### Pakete nachinstallieren
-echo https://dl-cdn.alpinelinux.org/alpine/v3.14/main >> /etc/apk/repositories
+### Paketquellen auf das offizielle Alpine Repo umbiegen
+echo https://dl-cdn.alpinelinux.org/alpine/v3.14/main > /etc/apk/repositories
 echo https://dl-cdn.alpinelinux.org/alpine/v3.14/community >> /etc/apk/repositories
-sed -i -e '/http:\/\/apk.ish.app/d' /etc/apk/repositories 
 
+### Pakete nachinstallieren
 apk update 
 apk upgrade
 apk add curl git nano openssh less
-
-### Offizielle Alpine-Repositories einbinden
-echo https://dl-cdn.alpinelinux.org/alpine/v3.12/main > /etc/apk/repositories
-echo https://dl-cdn.alpinelinux.org/alpine/v3.12/community >> /etc/apk/repositories
 
 ### git Konfiguration setzen
 # Who am I
