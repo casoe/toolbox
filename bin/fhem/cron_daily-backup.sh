@@ -77,7 +77,7 @@ done
 log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
 if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
   sudo mount $MOUNTDIR >> $LOG 2>&1
-	
+
 	if [ $? -ne 0 ]; then
 	{
 		cat $LOG |mail -s "ERROR $0" soehrens@gmail.com
