@@ -1,15 +1,18 @@
-# Vorhandene Partition über fdisk löschen und neu anlegen (einfach drüber schreiben)
-fdisk /dev/sda
+Quelle: https://www.codenotary.com/blog/enlarge-a-disk-and-partition-of-any-linux-vm-without-a-reboot/
 
-# Bei der Rückfrage, ob die Ext4-Signatur gelöscht werden soll, nein sagen
-N
+# growpart is part of the cloud-utils-package, and should be available in your distro's repositories, in case its not already installed with your OS. Debian or Ubuntu:
+apt-get install -y cloud-utils
 
-# fstab und UUID-checken, damit der initiale Mount funktioniert
-blkid
-cat /etc/fstab
+# To make the kernel aware, one can issue the following command as root:
+echo 1 > /sys/class/block/sda/device/rescan
 
-# Reboot damit das Betriebssystem dies merkt
-reboot
+# Vorhandene Partitionen anzeigen
+fdisk -l
 
-# Resize des Filesystems auf der Partition
+# Partition vergrößern
+growpart /dev/sda 1
+
+# The partition is resized now and the kernel is already using the new partition table. The last missing piece is the file system. Since we use an ext4 file system  
+# this is a one-liner as well, that can even run on a mounted file system:
 resize2fs /dev/sda1
+

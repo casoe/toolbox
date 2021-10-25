@@ -1,0 +1,6 @@
+sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list
+sudo sed -i 's/buster/bullseye/g' /etc/apt/sources.list.d/*
+
+sudo apt update
+sudo apt full-upgrade
+sudo apt autoremove

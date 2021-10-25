@@ -1,5 +1,13 @@
-# File mit 1GB Größe erzeugen
+# Vorhandenen Swap deaktivieren
+swapoff -a
+
+# Swapfile erzeugen (1-6 GB)
 dd if=/dev/zero of=/swapfile bs=1024 count=1048576
+dd if=/dev/zero of=/swapfile bs=1024 count=2097152
+dd if=/dev/zero of=/swapfile bs=1024 count=3145728
+dd if=/dev/zero of=/swapfile bs=1024 count=4194304
+dd if=/dev/zero of=/swapfile bs=1024 count=5242880
+dd if=/dev/zero of=/swapfile bs=1024 count=6291456
 
 # Konfiguration an fstab anhängen 
 echo "/swapfile none    swap    sw      0       0" >> /etc/fstab
