@@ -1,0 +1,7 @@
+### Portainer-Container starten
+docker run --name=portainer -d --restart=always -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v ~/docker/portainer/data:/data portainer/portainer --no-auth
+
+### Postgres-Container starten, Datenbankdump laden und Query abfeuern
+docker run --name=postgres -d --restart=always -p 5432:5432 -v ~/docker/postgres/data:/var/lib/postgresql/data -e POSTGRES_USER=fhem -e POSTGRES_PASSWORD=fhem -e POSTGRES_DB=fhem postgres:14-alpine -c shared_buffers=256MB -c effective_cache_size=512MB
+docker exec -i postgres pg_restore -v -c -Fc -U fhem -d fhem < db_backup_2021-10-25.sqlc
+docker exec -it postgres psql -U fhem -c 'select type, reading, count(*) from history group by type,reading order by type,reading;'
