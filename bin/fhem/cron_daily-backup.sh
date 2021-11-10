@@ -50,11 +50,11 @@ select count(*) from history;
 EOF
 
 ### Dump der Postgres-Datenbank
-log "INFO" "Dump der Postgres-Datenbank"
+log "INFO" "Dump der Postgres-Datenbank mit: $PGDUMP -v -Fc --file=$DBTARGET $DBNAME"
 $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 
 ### Wiederherstellen-Hinweis im Logfile
-log "INFO" "Wiederherstellen mit pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
+log "INFO" "Wiederherstellen mit: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
 
 ### Archivieren des Skripts und der Config-Dateien
 log "INFO" "Archivieren der relevanten Config-Dateien"
