@@ -1,0 +1,31 @@
+### https://blog.nillsf.com/index.php/2020/06/29/how-to-automatically-start-the-docker-daemon-on-wsl2/
+
+# cmd mit Administrator-Rechten öffnen
+wsl --install
+
+# Usernamen und Passwort vergeben
+
+# First, you’ll need to install Docker.
+sudo apt update
+sudo apt install docker.io -y
+
+sudo visudo
+
+sudo usermod -a -G docker $USER
+
+
+
+echo '# Start Docker daemon automatically when logging in if not running.' >> ~/.bashrc
+echo 'RUNNING=`ps aux | grep dockerd | grep -v grep`' >> ~/.bashrc
+echo 'if [ -z "$RUNNING" ]; then' >> ~/.bashrc
+echo '    sudo dockerd > /dev/null 2>&1 &' >> ~/.bashrc
+echo '    disown' >> ~/.bashrc
+echo 'fi' >> ~/.bashrc
+
+
+echo '# Start Docker daemon automatically when logging in if not running.' >> ~/.bashrc
+echo 'RUNNING=`ps aux | grep dockerd | grep -v grep`' >> ~/.bashrc
+echo 'if [ -z "$RUNNING" ]; then' >> ~/.bashrc
+echo '    sudo dockerd > /dev/null 2>&1 &' >> ~/.bashrc
+echo '    disown' >> ~/.bashrc
+echo 'fi' >> ~/.bashrc
