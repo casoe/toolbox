@@ -1,0 +1,2 @@
+### Quelle: https://www.harecoded.com/converting-csv-to-sql-using-1-line-in-bash-2275563/
+cat bcs-application.log | awk '{ printf "INSERT INTO table VALUES (\x27%s\x27,\x27%s\x27,\x27%s\x27,\x27%s\x27);",$1,$2,$3,$4;print ""}'
