@@ -2,7 +2,7 @@
 # hades-backup.sh
 # Carsten Söhrens, 20.02.2020
 
- set -x
+# set -x
 
 # Historie
 # 20.02.2020 Erste konsolidierte Version, soll einmal die Woche laufen (Backupzeit bei Test im Bereich von 8 min)
@@ -56,10 +56,6 @@ log "INFO" "Postgres starten"
 sudo systemctl start postgresql >> $LOG 2>&1
 sudo systemctl status postgresql >> $LOG 2>&1
 
-### Größen der bisherigen Backups anzeigen
-log "INFO" "Größen der bisherigen Backups anzeigen"
-sudo du -sm /mnt/backup/hades/* >> $LOG 2>&1
-
 ### NAS unmounten
 log "INFO" "NAS unmounten"
 sudo umount $MOUNTDIR >> $LOG 2>&1
@@ -67,6 +63,11 @@ sudo umount $MOUNTDIR >> $LOG 2>&1
 ### Backup-Zeit ausgeben
 log "INFO" "Backup-Zeit ausgeben"
 echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S") >> $LOG 2>&1
+
+### Löschen alter Logfiles
+log "INFO" "Löschen Lofiles älter als 10 Wochen"
+find /home/pi/backup/log/weekly_backup_* -mindepth 1 -mtime +70 >> $LOG 2>&1
+find /home/pi/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
 
 ### Log per Mail versenden
 #log "INFO" "Log per Mail versenden"
