@@ -6,6 +6,8 @@
 # 12.12.2017 Initiale Version
 # 24.02.2020 Erweiterung um insert-Statement auf der Datenbank, Kommentare ergänzt
 # 25.02.2020 delete-Statement für die Tabelle current ergänzt, Debug echo-Statements entfernt
+# 10.01.2022 Format für Angabe kW/h auf drei Nachkommastellen begrenzt
+# 31.01.2022 delete-Statement für fehlerhafte Daten von ENERGY_Yesterday ergänzt
 
 TOKEN=312020795:AAHF3Uc_5L6mcn9hlo7oEhaDfZ5ypWCc3Mk
 CHAT_ID=9437849
@@ -17,6 +19,10 @@ DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
 TODAY=`date -d "1 day ago" '+%d.%m.%Y'`
 TODAY1=`date -d "1 day ago" '+%Y-%m-%d'`
 TODAY2=`date -d "2 days ago" '+%Y-%m-%d'`
+
+# Fehlerhaft Daten für ENERGY_Yesterday am gestrigen und vorgestrigen Tag entfernen
+DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', timestamp)= '$TODAY2' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday' and timestamp !=(select min(timestamp) from history where date_trunc('day', timestamp)= '$TODAY2' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday');")
+DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', timestamp)= '$TODAY1' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday' and timestamp !=(select min(timestamp) from history where date_trunc('day', timestamp)= '$TODAY1' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday');")
 
 # Abfrage der total_consumption für gestern und vorgestern aus der Datenbank
 # "select distinct on" bestimmt den ersten Tupel einer Abfrage
@@ -40,7 +46,7 @@ CONSUMPTION=`printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g'`
 COSTS=`printf "%0.2f\n" $COSTS | sed 's/\./,/g'`
 
 # Nachricht für Telegram zusammensetzen
-MESSAGE="Stromverbrauch $TODAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
+MESSAGE="Stromverbrauch $TODAY:%\n$CONSUMPTION kW/h (ca. $COSTS EUR)"
 
 # Nachricht über Telegram absetzen
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"

@@ -22,7 +22,7 @@
 # 
 # m  h  dom mon dow   command
 
-  00 01 *   *   *     /home/pi/bin/cron_daily-backup.sh > /dev/null
-  00 02 *   *   sat   /home/pi/bin/cron_weekly-backup.sh > /dev/null
+  00 01 *   *   *     /home/pi/bin/cron_daily-backup.sh > /dev/null 2>&1
+  00 02 *   *   sat   /home/pi/bin/cron_weekly-backup.sh > /dev/null 2>&1
 
-  45 07 *   *   *     /home/pi/bin/fhemdb_calc-and-message-daily.sh > /dev/null
+  45 07 *   *   *     /home/pi/bin/cron_calc-and-message-daily.sh > /dev/null 2>&1
