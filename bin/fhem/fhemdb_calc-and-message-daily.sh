@@ -36,7 +36,7 @@ $PSQL -X $DBNAME -t -c "insert into history (timestamp, device, type, event, rea
 
 # Bei Kosten und Verbrauch den Punkt (Decimal) durch Komma ersetzen
 # Sieht dann besser in der Telegram-Message aus
-CONSUMPTION=`echo $CONSUMPTION | sed 's/\./,/g'`
+CONSUMPTION=`printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g'`
 COSTS=`printf "%0.2f\n" $COSTS | sed 's/\./,/g'`
 
 # Nachricht für Telegram zusammensetzen
