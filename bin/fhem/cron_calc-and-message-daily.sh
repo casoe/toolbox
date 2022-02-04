@@ -46,7 +46,7 @@ CONSUMPTION=`printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g'`
 COSTS=`printf "%0.2f\n" $COSTS | sed 's/\./,/g'`
 
 # Nachricht für Telegram zusammensetzen
-MESSAGE="Stromverbrauch $TODAY:%\n$CONSUMPTION kW/h (ca. $COSTS EUR)"
+MESSAGE="Stromverbrauch $TODAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
 
 # Nachricht über Telegram absetzen
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"
