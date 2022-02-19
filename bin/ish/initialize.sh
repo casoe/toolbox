@@ -3,7 +3,7 @@ echo https://dl-cdn.alpinelinux.org/alpine/v3.14/main > /etc/apk/repositories
 echo https://dl-cdn.alpinelinux.org/alpine/v3.14/community >> /etc/apk/repositories
 
 ### Pakete nachinstallieren
-apk update 
+apk update
 apk upgrade
 apk add curl git nano openssh less
 
@@ -41,4 +41,8 @@ ln -s  ~/toolbox/bin/ish ~/bin
 cp ~/toolbox/alias/profile-ish ~/.profile
 source ~/.profile
 
-
+### ssh mit keys vorkonfigurieren
+rm -rf ~/.ssh
+scp pi@hades:~/backup/ssh.tgz ~
+tar xvzf ~/ssh.tgz -C ~/
+rm -rf ~/ssh.tgz
