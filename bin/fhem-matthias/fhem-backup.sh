@@ -15,9 +15,8 @@ ZIPTARGET="/home/pi/backup/conf/fhem_backup_$TODAY.zip"
 REMOTE="/mnt/hd2tb/other/backup/hades"
 RSYNC="/usr/bin/rsync"
 
-### Löschen von Einträgen für Power, die älter als 7 Tage sind
+### Check der Einträge in der Datenbank und Ausgabe ins Logfile
 $PSQL $DBNAME << EOF > $LOG 2>&1
-delete from history where reading='power' and (timestamp < now() - interval '7 days');
 select type, reading, count(*) from history group by type,reading order by type,reading;
 select count(*) from history;
 EOF
