@@ -25,9 +25,9 @@ EOF
 $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 
 ### Archivieren der Config-Dateien
-$ZIP -rv $ZIPTARGET /home/pi/docker/data/fhem/fhem.cfg >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET /home/pi/docker/data/fhem/db.conf >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET /home/pi/docker/data/fhem/www/gplot/myPlot_*.gplot >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/fhem.cfg >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/db.conf >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/www/gplot/myPlot_*.gplot >> $LOG 2>&1
 
 ### rsync nach morpheus
 #$RSYNC -avz /home/pi/backup/ osmc@192.168.2.38:$REMOTE >> $LOG 2>&1
