@@ -38,13 +38,9 @@ log() {
 log "INFO" "Start von $0"
 START=$(date +%s)
 
-### Löschen von Einträgen für Power, die älter als 7 oder 30 Tage sind
-log "INFO" "Löschen von Einträgen für Power, die älter als 7 Tage sind"
+### Abfrage der Anzahl der Einträge in der Datenbank
+log "INFO" "Abfrage der Anzahl der Einträge in der Datenbank"
 $PSQL $DBNAME << EOF >> $LOG 2>&1
-delete from history where reading='ENERGY_Power' and (timestamp < now() - interval '7 days');
-delete from history where reading='power' and (timestamp < now() - interval '7 days');
-delete from history where type='FRITZBOX' and (timestamp < now() - interval '30 days');
-delete from history where type='SYSSTAT' and (timestamp < now() - interval '30 days');
 select type, reading, count(*) from history group by type,reading order by type,reading;
 select count(*) from history;
 EOF

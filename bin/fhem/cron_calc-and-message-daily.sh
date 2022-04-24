@@ -21,7 +21,7 @@ YESTERDAY=`date -d "1 day ago" '+%d.%m.%Y'`
 YDA_ISO=`date -d "1 day ago" '+%Y-%m-%d'`
 DBY_ISO=`date -d "2 days ago" '+%Y-%m-%d'`
 
-# Fehlerhaft Daten für ENERGY_Yesterday am gestrigen und vorgestrigen Tag entfernen
+# Fehlerhafte Daten für ENERGY_Yesterday am gestrigen und vorgestrigen Tag entfernen
 DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', timestamp)= '$DBY_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday' and timestamp !=(select min(timestamp) from history where date_trunc('day', timestamp)= '$DBY_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday');")
 DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', timestamp)= '$YDA_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday' and timestamp !=(select min(timestamp) from history where date_trunc('day', timestamp)= '$YDA_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday');")
 
@@ -51,4 +51,3 @@ MESSAGE="Stromverbrauch $YESTERDAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
 
 # Nachricht über Telegram absetzen
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"
-
