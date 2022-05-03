@@ -9,7 +9,8 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAsfDW7HTO2aNYj74C5ZyQyWoeyTw6J9h9ElQG7k/pW/Jj
 chmod 0700 .ssh && chmod 0600 .ssh/*
 
 ### Systemwerkzeuge installieren
-apt-get -y install mc unp curl unzip git apt-transport-https psmisc lsof bash-completion rsync locate gawk
+apt install -y mc unp curl unzip git apt-transport-https psmisc lsof bash-completion rsync locate gawk netcat-openbsd
+apt purge -y netcat-traditional
 
 ### git konfigurieren
 nano /root/.gitconfig

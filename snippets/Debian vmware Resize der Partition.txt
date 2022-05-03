@@ -9,7 +9,7 @@ echo 1 > /sys/class/block/sda/device/rescan
 # Vorhandene Partitionen anzeigen
 fdisk -l
 
-# Partition vergrößern
+# Partition vergrößern (1 ist die Nummer der Partition)
 growpart /dev/sda 1
 
 # The partition is resized now and the kernel is already using the new partition table. The last missing piece is the file system. Since we use an ext4 file system  

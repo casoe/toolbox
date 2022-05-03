@@ -28,11 +28,3 @@ sudo usermod -aG docker pi
 ### Test run (vorher relog wegen der angepassten Gruppe)
 docker run hello-world
 
-### docker compose (OPTIONAL) ###
-
-# Install required packages
-apt update
-apt install -y python python-pip
-
-# Install Docker Compose from pip
-pip install docker-compose
