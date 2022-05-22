@@ -11,6 +11,7 @@
 # 23.05.2020 Fix in Bezug auf mount mit sudo
 # 31.05.2020 Logging angepasst auf die gleiche Funktion wie im daily-backup
 # 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
+# 22.05.2022 Nach Umstellung auf Container das Stoppen und Starten der Postgres-DB entfernt
 
 RASPIBACKUP="/usr/local/bin/raspiBackup.sh"
 MOUNTDIR="/mnt/backup"
@@ -44,17 +45,9 @@ if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
 	fi;
 fi
 
-### Postgres-DB stoppen und Backup des Gesamtsystems durchführen
-log "INFO" "Postgres stoppen"
-sudo systemctl stop postgresql >> $LOG 2>&1
-sudo systemctl status postgresql >> $LOG 2>&1
+### Backup des Gesamtsystems durchführen
 log "INFO" "Backup des Gesamtsystems durch raspiBackup durchführen"
 sudo $RASPIBACKUP -a : -o : -m minimal >> $LOG 2>&1
-
-### Restart Postgres und Backup-Mount aushängen
-log "INFO" "Postgres starten"
-sudo systemctl start postgresql >> $LOG 2>&1
-sudo systemctl status postgresql >> $LOG 2>&1
 
 ### NAS unmounten
 log "INFO" "NAS unmounten"
