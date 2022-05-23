@@ -12,11 +12,13 @@
 # 31.05.2020 Logging angepasst auf die gleiche Funktion wie im daily-backup
 # 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 # 22.05.2022 Nach Umstellung auf Container das Stoppen und Starten der Postgres-DB entfernt
+# 23.05.2022 Diverse Pfade korrigiert
 
+HOME="/home/carsten"
 RASPIBACKUP="/usr/local/bin/raspiBackup.sh"
 MOUNTDIR="/mnt/backup"
 TODAY=$(date +"%Y-%m-%d")
-LOG="/home/pi/backup/log/weekly_backup_$TODAY.log"
+LOG="$HOME/backup/log/weekly_backup_$TODAY.log"
 
 ### Funktion zum effizienteren Logging
 log() {
@@ -59,8 +61,8 @@ echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%
 
 ### Löschen alter Logfiles
 log "INFO" "Löschen Lofiles älter als 10 Wochen"
-find /home/pi/backup/log/weekly_backup_* -mindepth 1 -mtime +70 >> $LOG 2>&1
-find /home/pi/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
+find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 >> $LOG 2>&1
+find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
 
 ### Log per Mail versenden
 #log "INFO" "Log per Mail versenden"

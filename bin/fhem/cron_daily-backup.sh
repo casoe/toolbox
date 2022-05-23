@@ -1,4 +1,4 @@
-#!/bin/bash
+##!/bin/bash
 # cron_daily-backup.sh
 # Carsten Söhrens, 25.05.2017
 
@@ -13,8 +13,9 @@
 # 28.05.2020 Bugfix am Logging (> statt >>)
 # 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 # 01.05.2022 Umstellung der Backup-Pfade auf das Docker-Setup, HOME in Variable gesetzt
+# 23.05.2022 Löschen des Logs beim Weekly-Backup entfernt
 
-HOME="/home/pi"
+HOME="/home/carsten"
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
 ZIP="/usr/bin/zip"
@@ -71,9 +72,6 @@ for DAYBACK in {15..30}; do
 	rm -rf $HOME/backup/log/db_backup_$DATEBACK*
 	rm -rf $HOME/fhem-docker/fhem/log/fhem-$DATEBACK*
 done
-
-rm $HOME/backup/log/weekly_backup_$(date --date "-3 month" +%+4Y-%m-)*
-
 
 ### NAS mounten; bei Fehler Abbruch und Mail versenden
 log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
