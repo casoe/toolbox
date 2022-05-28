@@ -59,8 +59,8 @@ sudo umount $MOUNTDIR >> $LOG 2>&1
 log "INFO" "Backup-Zeit ausgeben"
 echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S") >> $LOG 2>&1
 
-### Löschen alter Logfiles
-log "INFO" "Löschen Lofiles älter als 10 Wochen"
+### Löschen alter Logfiles älter als 10 Wochen
+log "INFO" "Löschen Logfiles älter als 10 Wochen"
 find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 >> $LOG 2>&1
 find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
 
