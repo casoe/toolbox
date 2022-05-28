@@ -17,9 +17,9 @@ PSQL="/usr/bin/psql"
 DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
 
 # Das Datum von gestern (YDA) und vorgestern (DBY) berechnen
-YESTERDAY=`date -d "1 day ago" '+%d.%m.%Y'`
-YDA_ISO=`date -d "1 day ago" '+%Y-%m-%d'`
-DBY_ISO=`date -d "2 days ago" '+%Y-%m-%d'`
+YESTERDAY=$(date -d "1 day ago" '+%d.%m.%Y')
+YDA_ISO=$(date -d "1 day ago" '+%Y-%m-%d')
+DBY_ISO=$(date -d "2 days ago" '+%Y-%m-%d')
 
 # Fehlerhafte Daten für ENERGY_Yesterday am gestrigen und vorgestrigen Tag entfernen
 DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', timestamp)= '$DBY_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday' and timestamp !=(select min(timestamp) from history where date_trunc('day', timestamp)= '$DBY_ISO' and device = 'MQTT2_DVES_0371A9' and reading = 'ENERGY_Yesterday');")
@@ -27,12 +27,12 @@ DELETE=$($PSQL -X $DBNAME -t -c "delete from history where date_trunc('day', tim
 
 # Abfrage der total_consumption für gestern und vorgestern aus der Datenbank
 # "select distinct on" bestimmt den ersten Tupel einer Abfrage
-TOTAL1=`$PSQL -X $DBNAME -t -c "SELECT DISTINCT ON (timestamp::date) value FROM history where reading='total_consumption' AND timestamp::date='$YDA_ISO' ORDER BY timestamp::date DESC, timestamp DESC;"`
-TOTAL2=`$PSQL -X $DBNAME -t -c "SELECT DISTINCT ON (timestamp::date) value FROM history where reading='total_consumption' AND timestamp::date='$DBY_ISO' ORDER BY timestamp::date DESC, timestamp DESC;"`
+TOTAL1=$($PSQL -X $DBNAME -t -c "SELECT DISTINCT ON (timestamp::date) value FROM history where reading='total_consumption' AND timestamp::date='$YDA_ISO' ORDER BY timestamp::date DESC, timestamp DESC;")
+TOTAL2=$($PSQL -X $DBNAME -t -c "SELECT DISTINCT ON (timestamp::date) value FROM history where reading='total_consumption' AND timestamp::date='$DBY_ISO' ORDER BY timestamp::date DESC, timestamp DESC;")
 
 # Verbrauch berechnen (dafür muss bc installiert sein -> apt install bc)
-CONSUMPTION=`bc <<< "$TOTAL1-$TOTAL2"`
-COSTS=`bc <<< "$CONSUMPTION*0.25"`
+CONSUMPTION=$(bc <<< "$TOTAL1-$TOTAL2")
+COSTS=$(bc <<< "$CONSUMPTION*0.25")
 
 # Alte Datensätze mit reading 'daily_consumption' als current entfernen
 # Verbrauch von gestern als zusätzliche Zeile in die Datenbank einfügen (current und history)
@@ -43,8 +43,8 @@ $PSQL -X $DBNAME -t -c "insert into history (timestamp, device, type, event, rea
 
 # Bei Kosten und Verbrauch den Punkt (Decimal) durch Komma ersetzen
 # Sieht dann besser in der Telegram-Message aus
-CONSUMPTION=`printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g'`
-COSTS=`printf "%0.2f\n" $COSTS | sed 's/\./,/g'`
+CONSUMPTION=$(printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g')
+COSTS=$(printf "%0.2f\n" $COSTS | sed 's/\./,/g')
 
 # Nachricht für Telegram zusammensetzen
 MESSAGE="Stromverbrauch $YESTERDAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
