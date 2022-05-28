@@ -13,6 +13,7 @@
 # 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 # 22.05.2022 Nach Umstellung auf Container das Stoppen und Starten der Postgres-DB entfernt
 # 23.05.2022 Diverse Pfade korrigiert
+# 28.05.2022 Logging noch mal angepasst (Funktion wieder entfernt)
 
 HOME="/home/carsten"
 RASPIBACKUP="/usr/local/bin/raspiBackup.sh"
@@ -20,24 +21,14 @@ MOUNTDIR="/mnt/backup"
 TODAY=$(date +"%Y-%m-%d")
 LOG="$HOME/backup/log/weekly_backup_$TODAY.log"
 
-### Funktion zum effizienteren Logging
-log() {
-	if [[ -z "$LOG" ]]; then
-			echo "[$(date +%Y-%m-%d\ %H:%M:%S)]: ERROR log variable in $0 not defined" 1>&2
-			exit 1
-	fi
-
-	echo "[$(date +%Y-%m-%d\ %H:%M:%S)]: $*" >> $LOG 2>&1
-}
-
-### Log öffnen und Startzeit speichern
-log "INFO" "Start von $0"
+### speichern
+echo "INFO Start von $0"
 START=$(date +%s)
 
 ### NAS mounten; bei Fehler Abbruch und Mail versenden
-log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
+echo "INFO NAS mounten; bei Fehler Abbruch und Mail versenden"
 if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
-  sudo mount $MOUNTDIR >> $LOG 2>&1
+  sudo mount $MOUNTDIR
 
 	if [ $? -ne 0 ]; then
 	{
@@ -48,22 +39,22 @@ if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
 fi
 
 ### Backup des Gesamtsystems durchführen
-log "INFO" "Backup des Gesamtsystems durch raspiBackup durchführen"
-sudo $RASPIBACKUP -a : -o : -m minimal >> $LOG 2>&1
+echo "INFO Backup des Gesamtsystems durch raspiBackup durchführen"
+sudo $RASPIBACKUP -a : -o : -m minimal
 
 ### NAS unmounten
-log "INFO" "NAS unmounten"
-sudo umount $MOUNTDIR >> $LOG 2>&1
+echo "INFO NAS unmounten"
+sudo umount $MOUNTDIR
 
 ### Backup-Zeit ausgeben
-log "INFO" "Backup-Zeit ausgeben"
-echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S") >> $LOG 2>&1
+echo "INFO Backup-Zeit ausgeben"
+echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S")
 
 ### Löschen alter Logfiles älter als 10 Wochen
-log "INFO" "Löschen Logfiles älter als 10 Wochen"
-find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 >> $LOG 2>&1
+echo "INFO Löschen Logfiles älter als 10 Wochen"
+find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70
 find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
 
 ### Log per Mail versenden
-#log "INFO" "Log per Mail versenden"
+#echo "INFO Log per Mail versenden"
 #cat $LOG | mail -s "Hades (FHEM) Weekly Backup" soehrens@gmail.com

@@ -14,57 +14,47 @@
 # 08.06.2020 Umstellung beim Mounten; bei Fehler wird eine Mail versandt und das Skript abgebrochen
 # 01.05.2022 Umstellung der Backup-Pfade auf das Docker-Setup, HOME in Variable gesetzt
 # 23.05.2022 Löschen des Logs beim Weekly-Backup entfernt
+# 28.05.2022 Logging noch mal angepasst (Funktion wieder entfernt)
 
 HOME="/home/carsten"
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
 ZIP="/usr/bin/zip"
 DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
-TODAY=`date +"%Y-%m-%d"`
+TODAY=$(date +"%Y-%m-%d")
 LOG="$HOME/backup/log/db_backup_$TODAY.log"
 DBTARGET="$HOME/backup/db/db_backup_$TODAY.sqlc"
 ZIPTARGET="$HOME/backup/conf/fhem_backup_$TODAY.zip"
 RSYNC="/usr/bin/rsync"
 MOUNTDIR="/mnt/backup"
 
-
-### Funktion zum effizienteren Logging
-log() {
-	if [[ -z "$LOG" ]]; then
-			echo "[$(date +%Y-%m-%d\ %H:%M:%S)]: ERROR log variable in $0 not defined" 1>&2
-			exit 1
-	fi
-
-	echo "[$(date +%Y-%m-%d\ %H:%M:%S)]: $*" >> $LOG 2>&1
-}
-
-### Log öffnen und Startzeit speichern
-log "INFO" "Start von $0"
+### Startzeit speichern
+echo "INFO Start von $0"
 START=$(date +%s)
 
 ### Abfrage der Anzahl der Einträge in der Datenbank
-log "INFO" "Abfrage der Anzahl der Einträge in der Datenbank"
-$PSQL $DBNAME << EOF >> $LOG 2>&1
+echo "INFO Abfrage der Anzahl der Einträge in der Datenbank"
+$PSQL $DBNAME << EOF
 select type, reading, count(*) from history group by type,reading order by type,reading;
 select count(*) from history;
 EOF
 
 ### Dump der Postgres-Datenbank
-log "INFO" "Dump der Postgres-Datenbank mit: $PGDUMP -v -Fc --file=$DBTARGET $DBNAME"
-$PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
+echo "INFO Dump der Postgres-Datenbank mit: $PGDUMP -v -Fc --file=$DBTARGET $DBNAME"
+$PGDUMP -v -Fc --file=$DBTARGET $DBNAME
 
 ### Wiederherstellen-Hinweis im Logfile
-log "INFO" "Wiederherstellen mit: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
+echo "INFO Wiederherstellen mit: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
 
 ### Archivieren des Skripts und der Config-Dateien
-log "INFO" "Archivieren der wichtigsten Config-Dateien"
-$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/fhem.cfg >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/db.conf >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/www/gplot/myPlot*.gplot >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET $HOME/.bash_history >> $LOG 2>&1
+echo "INFO Archivieren der wichtigsten Config-Dateien"
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/fhem.cfg
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/db.conf
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/www/gplot/myPlot*.gplot
+$ZIP -rv $ZIPTARGET $HOME/.bash_history
 
 ### Löschen aller lokalen Dateien von Tag -15 bis -30
-log "INFO" "Löschen aller lokalen Dateien von Tag -15 bis -30 sowie alter Log-Dateien"
+echo "INFO Löschen aller lokalen Dateien von Tag -15 bis -30 sowie alter Log-Dateien"
 for DAYBACK in {15..30}; do
 	DATEBACK=$(date --date "- $DAYBACK day" +%F)
 	rm -rf $HOME/backup/db/db_backup_$DATEBACK*
@@ -74,9 +64,9 @@ for DAYBACK in {15..30}; do
 done
 
 ### NAS mounten; bei Fehler Abbruch und Mail versenden
-log "INFO" "NAS mounten; bei Fehler Abbruch und Mail versenden"
+echo "INFO NAS mounten; bei Fehler Abbruch und Mail versenden"
 if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
-  sudo mount $MOUNTDIR >> $LOG 2>&1
+  sudo mount $MOUNTDIR
 
 	if [ $? -ne 0 ]; then
 	{
@@ -87,10 +77,10 @@ if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
 fi
 
 ### rsync der lokalen Backup-Daten zum NAS
-log "INFO" "rsync der lokalen Backup-Daten zum NAS"
-sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades/fhem  >> $LOG 2>&1
+echo "INFO rsync der lokalen Backup-Daten zum NAS"
+sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades/fhem
 
 sudo umount $MOUNTDIR
 
 ### Backup-Zeit ausgeben
-log "INFO" "Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S")"
+echo "INFO Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%S")"
