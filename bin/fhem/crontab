@@ -18,11 +18,19 @@
 # at 5 a.m every week with:
 # 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
 # 
+# Environment
+
+SHELL=/bin/bash
+MAILTO=soehrens@gmail.com
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:/home/carsten/bin
+HOME=/home/carsten
+
 # For more information see the manual pages of crontab(5) and cron(8)
 # 
 # m h  dom mon dow   command
 
- 00 01 *   *   *     /home/carsten/bin/cron_daily-backup.sh  > /home/carsten/backup/log/db_backup_$(date +"%Y-%m-%d").log     2>&1
- 00 02 *   *   sat   /home/carsten/bin/cron_weekly-backup.sh > /home/carsten/backup/log/weekly_backup_$(date +"%Y-%m-%d").log 2>&1
+# 00 01 *   *   *     cron_daily-backup.sh  > $HOME/backup/log/db_backup_$(date +\%Y-\%m-\%d).log     2>&1
+ 00 01 *   *   *     cron_daily-backup.sh  > $HOME/backup/log/db_backup_$(date -I).log     2>&1
+ 00 02 *   *   sat   cron_weekly-backup.sh > $HOME/backup/log/weekly_backup_$(date -I).log 2>&1
 
  45 07 *   *   *     /home/carsten/bin/cron_calc-and-message-daily.sh > /dev/null 2>&1
