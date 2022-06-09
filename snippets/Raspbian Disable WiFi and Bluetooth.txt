@@ -1,0 +1,6 @@
+sudo nano /boot/config.txt
+
+[all]
+# Disable WiFi and Bluetooth
+dtoverlay=disable-wifi
+dtoverlay=disable-bt

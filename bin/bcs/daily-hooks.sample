@@ -5,8 +5,7 @@
 rm -rf /opt/projektron/bcs/server/data/FTIndex/*
 
 # Maintenance-Upgrade installieren
-/usr/bin/unzip -d /opt/projektron/bcs/server -o /opt/projektron/bcs/updates/projektron-bcs-18.1.22
-cat /opt/projektron/bcs/server/VERSION.TXT |  mail -E -s "[Info] BCS Maintenance Release auf Live installiert" "bcs-support@inform-software.com"
+/usr/bin/unzip -d /opt/projektron/bcs/server -o /opt/projektron/bcs/updates/projektron-bcs-latest
 
 # Tomcat-Update installieren
 rm -rf /opt/projektron/bcs/server/tomcat/bin/*

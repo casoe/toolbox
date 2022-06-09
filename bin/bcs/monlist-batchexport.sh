@@ -6,6 +6,8 @@
 TODAY=`date +"%d.%m.%Y"`
 source monlist-startdate.cfg
 MONTHS=$(( (`date +%Y`-`date -d $STARTDATE +"%Y"`)*12 + `date +%-m`-`date -d $STARTDATE +"%-m"`))
+SCHEDULERCLIENT="/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob"
+
 
 function wait_for_cpu_usage {
     threshold=$1
@@ -65,12 +67,6 @@ while [  $COUNTER -lt $MONTHS ]; do
 	PARAM1=`date -d "$STARTDATE +$COUNTER month" +"%d.%m.%Y"`
 	### 31.01.2016
 	PARAM2=`date -d "$STARTDATE +$(($COUNTER+1)) month -1 day" +"%d.%m.%Y"`
-	### 01.02.2016
-	PARAM3=`date -d "$STARTDATE +$(($COUNTER+1)) month" +"%d.%m.%Y"`
-	### 2016-01-01
-	PARAM4=`date -d "$STARTDATE +$COUNTER month" +"%Y-%m-%d"`
-	### 2016-01-31
-	PARAM5=`date -d "$STARTDATE +$(($COUNTER+1)) month -1 day" +"%Y-%m-%d"`
 	### 2016-01
 	FOLDER=`date -d "$STARTDATE +$COUNTER month" +"%Y-%m"`
 
@@ -78,21 +74,11 @@ while [  $COUNTER -lt $MONTHS ]; do
 	### Ein bisschen Ausgabe, was wir gerade machen
 	echo Processing $FOLDER
 
-	### Exporte als Vorbereitung für das Patchen kopieren
-	cp -f export.xml/* /opt/projektron/bcs/server/conf/export/
-
-	### Patchen der BCS-Export-Dateien mit den jeweiligen Datumsangaben
-	grep -rl "SED_PARAM1" /opt/projektron/bcs/server/conf/export/CSV_Monlist_* -R|xargs sed -i 's/SED_PARAM1/'"$PARAM1"'/g'
-	grep -rl "SED_PARAM2" /opt/projektron/bcs/server/conf/export/CSV_Monlist_* -R|xargs sed -i 's/SED_PARAM2/'"$PARAM2"'/g'
-	grep -rl "SED_PARAM3" /opt/projektron/bcs/server/conf/export/CSV_Monlist_* -R|xargs sed -i 's/SED_PARAM3/'"$PARAM3"'/g'
-	grep -rl "SED_PARAM4" /opt/projektron/bcs/server/conf/export/CSV_Monlist_* -R|xargs sed -i 's/SED_PARAM4/'"$PARAM4"'/g'
-	grep -rl "SED_PARAM5" /opt/projektron/bcs/server/conf/export/CSV_Monlist_* -R|xargs sed -i 's/SED_PARAM5/'"$PARAM5"'/g'
-
 	### Triggern der Exporte über den Scheduler-Client
-	/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t CSV_Monlist_Allowances_Batch
-	/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t CSV_Monlist_Appointment_Batch
-	/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t CSV_Monlist_DeputatUser_Batch
-	/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t CSV_Monlist_Efforts_Batch
+	$SCHEDULERCLIENT -t CSV_Monlist_Allowances_Batch  "export.param.startdate=$PARAM1" "export.param.enddate=$PARAM2"
+	$SCHEDULERCLIENT -t CSV_Monlist_Appointment_Batch "export.param.startdate=$PARAM1" "export.param.enddate=$PARAM2"
+	$SCHEDULERCLIENT -t CSV_Monlist_DeputatUser_Batch "export.param.startdate=$PARAM1" "export.param.enddate=$PARAM2"
+	$SCHEDULERCLIENT -t CSV_Monlist_Efforts_Batch     "export.param.startdate=$PARAM1" "export.param.enddate=$PARAM2"
 
 	### Zielverzeichnis anlegen
 	mkdir -p exports/$FOLDER/
@@ -116,10 +102,6 @@ while [  $COUNTER -lt $MONTHS ]; do
 
 	let COUNTER+=1
 done
-
-### Abschließend noch einmal die Export-Definitionen kopieren (für stabiles git-Repository)
-cp -f export.xml/* /opt/projektron/bcs/server/conf/export/
-
 
 ### Counter zurücksetzen und nochmal über alle Files iterieren, um json zu erzeugen
 COUNTER=0

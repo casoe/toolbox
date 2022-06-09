@@ -18,6 +18,8 @@ PSQL_ODS30="psql postgresql://bcs@$DATABASE/ods30"
 PSQL_ODS70="psql postgresql://bcs@$DATABASE/ods70"
 PSQL_ODS80="psql postgresql://bcs@$DATABASE/ods80"
 KITCHEN="/opt/projektron/bcs/data-integration/kitchen.sh"
+AWK=/usr/bin/awk
+STATISTICS_LOG=/opt/projektron/bcs/server/log/inform_cron/daily-export-pdi2ods-statistics.csv
 
 MONLIST_GB30="/opt/projektron/bcs/server/inform_etl/monlist2ods30.kjb"
 DATEV_GB30="/opt/projektron/bcs/server/inform_etl/datev2ods30.kjb"
@@ -28,7 +30,11 @@ DATEV_GB70="/opt/projektron/bcs/server/inform_etl/datev2ods70.kjb"
 MONLIST_GB80="/opt/projektron/bcs/server/inform_etl/monlist2ods80.kjb"
 
 ### Mount DFS volume, if problem send mail and abort
-mount -v -t cifs //intern.inform-software.com/files $MOUNTDIR -o vers=3.0,rw,credentials=/root/.cifs,noserverino
+if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
+{
+	mount -v -t cifs //intern.inform-software.com/files $MOUNTDIR -o vers=3.0,rw,credentials=/root/.cifs,noserverino
+}
+fi;
 
 if [ $? -ne 0 ]; then
 {
@@ -36,6 +42,35 @@ if [ $? -ne 0 ]; then
 	exit 1;
 }
 fi;
+
+### Schreibe Zeitstempel der importierten Dateien und die aktuelle Differenz in Tagen zur Systemzeit in eine CSV-Datei
+ls -la --time-style=long-iso /mnt/dfs/Global/GB30/*$(date +"%Y")* | grep 'Fre\|Kost\|Umsatz\|Ver' |grep -v 'gb30' |grep -v '\$' |\
+$AWK '{
+	# Systemzeit holen
+	date=systime();
+	# Stunden und Minuten loswerden bzw. auf 0 setzen
+	d1=mktime(strftime("%Y %m %d 00 00 00",date));
+	# Zeitstempel aus ls so umformatieren, dass mktime funktioniert
+	d2=$6" "$7":00";
+	gsub(/[-:]/," ",d2);
+	# Stunden und Minuten loswerden bzw. auf 0 setzen
+	d2=mktime(strftime("%Y %m %d 00 00 00",mktime(d2)));
+	# Ausgabe der berechneten und formatierten Werte
+	print strftime("%Y-%m-%d;%H:%M",date)";"$6";"$7";"$8";"(d1-d2)/86400}' >> $STATISTICS_LOG
+
+ls -la --time-style=long-iso /mnt/dfs/Global/GB70/*$(date +"%Y")* | grep 'Fre\|Kost\|Umsatz\|Ver' |grep -v 'gb70' |grep -v '\$' |\
+$AWK '{
+	# Systemzeit holen
+	date=systime();
+	# Stunden und Minuten loswerden bzw. auf 0 setzen
+	d1=mktime(strftime("%Y %m %d 00 00 00",date));
+	# Zeitstempel aus ls so umformatieren, dass mktime funktioniert
+	d2=$6" "$7":00";
+	gsub(/[-:]/," ",d2);
+	# Stunden und Minuten loswerden bzw. auf 0 setzen
+	d2=mktime(strftime("%Y %m %d 00 00 00",mktime(d2)));
+	# Ausgabe der berechneten und formatierten Werte
+	print strftime("%Y-%m-%d;%H:%M",date)";"$6";"$7";"$8";"(d1-d2)/86400}' >> $STATISTICS_LOG
 
 ### Kopiere GB30-Datev-Exporte für die Datenintegration
 cp -v /mnt/dfs/Global/GB30/Fre3-*    /opt/projektron/bcs/server/inform_etl/datev/gb30/
@@ -117,3 +152,7 @@ $KITCHEN -file=$DATEV_GB30
 $KITCHEN -file=$MONLIST_GB70
 $KITCHEN -file=$DATEV_GB70
 $KITCHEN -file=$MONLIST_GB80
+
+# Nachbearbeitung/Korrektur/Ergänzung der Daten nach der Integration
+$PSQL_ODS30 -f /opt/projektron/bcs/server/inform_scripts/ods30-pdi2ods-postprocessing.sql
+$PSQL_ODS70 -f /opt/projektron/bcs/server/inform_scripts/ods70-pdi2ods-postprocessing.sql

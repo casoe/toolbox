@@ -40,13 +40,12 @@ fi
 ### Tabellen crashed (diese sind schon vorhanden und werden bei pg_restore nicht gedropped)
 $PSQL -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname='public'" | $PSQL
 
-echo Spiegelung des Data-Verzeichnisses und des DB-Backups vom Live-Server mit rsync
-mkdir -p $BCSHOME/../restore/db
-rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/files/ $BCSHOME/data/files
-rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/server/data/FTIndex/ $BCSHOME/data/FTIndex
-rsync -avP --delete  root@172.16.1.101:/opt/projektron/bcs/backup/current/db/ $BCSHOME/../restore/db
+echo Verlinkung und Spiegelung des Data-Verzeichnisses
+rm -rf $BCSHOME/data/files/*
+cp -val  $BCSHOME/../restore/files/* $BCSHOME/data/files/
+rsync -avP --delete  $BCSHOME/../restore/ftindex/ $BCSHOME/data/FTIndex
 
-echo Restore auf Next-DB
+echo Restore der DB
 $PGRESTORE -v -j 12 -w -n public -h localhost -p 5432 -d bcs_next -U bcs -Fd $BCSHOME/../restore/db/
 
 if [[ "$MACHINE" != 'bcs' ]]; then
@@ -54,8 +53,7 @@ if [[ "$MACHINE" != 'bcs' ]]; then
 	$PSQL -c "UPDATE custattr_int SET value=0 WHERE attrib='syncAdapterActive';"
 fi
 
-
-
+# Server-ID entfernen
 $BCSHOME/bin/Restore.sh -rmserverid
 
 echo Start BCS

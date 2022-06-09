@@ -5,6 +5,7 @@
 ### Allgemeine Variablen
 TODAY=`date +"%d.%m.%Y"`
 STARTDATE="2015-01-01"
+BCSHOME="/opt/projektron/bcs/server"
 MONTHS=$(( (`date +%Y`-`date -d $STARTDATE +"%Y"`)*12 + `date +%-m`-`date -d $STARTDATE +"%-m"`))
 echo $MONTHS Monate seit $STARTDATE
 
@@ -23,6 +24,7 @@ SCHEDULERCLIENT="/opt/projektron/bcs/server/bin/SchedulerClient.sh -u cron -p e6
 ### Für die Access Credentials wird .pgpass in home ausgewertet
 ### Droppen der BCS-bezogenen Tabellen und neues Erzeugen
 $PSQL -f /opt/projektron/bcs/server/inform_scripts/ods-createbcstables.sql
+$PSQL -f /opt/projektron/bcs/server/inform_scripts/ods-createdatevmonlisttables.sql
 
 if [ $? -ne 0 ]; then
 {
@@ -36,6 +38,8 @@ $SCHEDULERCLIENT -t JDBC_ODS30_Acquisitions
 $SCHEDULERCLIENT -t JDBC_ODS30_Allowances
 $SCHEDULERCLIENT -t JDBC_ODS30_Conferenceregistrations
 $SCHEDULERCLIENT -t JDBC_ODS30_Costrates
+$SCHEDULERCLIENT -t JDBC_ODS30_IncomingInvoices
+$SCHEDULERCLIENT -t JDBC_ODS30_EffortsFixed
 $SCHEDULERCLIENT -t JDBC_ODS30_Effortplan
 $SCHEDULERCLIENT -t JDBC_ODS30_Employees
 $SCHEDULERCLIENT -t JDBC_ODS30_Invoices
@@ -78,3 +82,5 @@ $SCHEDULERCLIENT -t JDBC_ODS30_Efforts "export.param.startdate=$START" "export.p
 ### Export der Termine ebenfalls monatsweise, da diese immer Start und Ende brauchen
 $SCHEDULERCLIENT -t JDBC_ODS30_Appointments "export.param.startdate=$START" "export.param.enddate=$END"
 
+### Berechtigungen setzen
+sh $BCSHOME/inform_scripts/ods30-grantselect.sh

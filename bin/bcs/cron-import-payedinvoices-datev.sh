@@ -6,11 +6,11 @@
 # - Pfadnamen der zu bearbeitenden Dateien
 # - Logdateien mit importierte Datensätze abspeichern; ist das möglich; wenn nicht. evt. Einstellung in XML auf Logging belassen
 
-PYTHON="/usr/bin/python3"
+PYTHON="/usr/local/bin/python3.9"
 
 SUPPORTMAIL="bcs-support@inform-software.com"
 
-SCRIPT="import-payedinvoices-datev-gb30.sh"
+SCRIPT="cron-import-payedinvoices-datev.sh"
 BCSHOME="/opt/projektron/bcs/server"
 BCSIMPORT="/opt/projektron/bcs/import"
 SOURCEDIR="Global/GB30"

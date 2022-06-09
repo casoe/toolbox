@@ -1,0 +1,11 @@
+# Shell im Container öffnen
+docker exec -it fhem-docker-fhem-1 /bin/bash
+
+# Zum User fhem werden
+su fhem
+
+# Vorhandenen Eintrag in known_hosts löschen
+ssh-keygen -f "/opt/fhem/.ssh/known_hosts" -R "192.168.2.6"
+
+# ssh-key remote kopieren
+ssh-copy-id -i .ssh/id_rsa carsten@192.168.2.6

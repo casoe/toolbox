@@ -1,5 +1,4 @@
 #!/bin/bash
-# Name : bcs-copyfromlive.sh
 # Autor: Carsten Söhrens
 
 ### Überprüfe, auf welcher Maschine das Skript ausgeführt wird
@@ -13,7 +12,7 @@ else
 fi
 
 BCSHOME=/opt/projektron/bcs/server
-LOG=$BCSHOME/copyfromlive.log
+LOG=$BCSHOME/specific-restore.log
 PGDUMP=/usr/bin/pg_dump
 PGRESTORE=/usr/bin/pg_restore
 FULLDATE=`date +\%Y-\%m-\%d`
@@ -38,12 +37,15 @@ fi
 ### Tabellen crashed (diese sind schon vorhanden und werden bei pg_restore nicht gedropped)
 $PSQL -t -c "select 'drop table \"' || tablename || '\" cascade;' from pg_tables where schemaname='public'" | $PSQL
 
-echo Verlinkung und Spiegelung des Data-Verzeichnisses
-rm -rf $BCSHOME/data/files/*
-cp -val  $BCSHOME/../restore/files/* $BCSHOME/data/files/
-rsync -avP --delete  $BCSHOME/../restore/ftindex/ $BCSHOME/data/FTIndex
+echo Spiegelung des Data-Verzeichnisses und des DB-Backups vom Live-Server mit rsync
+mkdir -p $BCSHOME/../restore/db
+rsync -avP --delete  root@172.16.1.101:/mnt/backup/bcsbackup_2020-04-29/files/ $BCSHOME/data/files
+rsync -avP --delete  root@172.16.1.101:/mnt/backup/bcsbackup_2020-04-29/db/ $BCSHOME/../restore/db
 
-echo Restore der DB
+echo Volltestindex löschen, wird dann bei Neustart neu erzeugt
+rm -rf $BCSHOME/data/FTIndex/*
+
+echo Restore auf DB
 $PGRESTORE -v -j 12 -w -n public -h localhost -p 5432 -d bcs -U bcs -Fd $BCSHOME/../restore/db/
 
 if [[ "$MACHINE" != 'bcs' ]]; then
@@ -51,7 +53,6 @@ if [[ "$MACHINE" != 'bcs' ]]; then
 	$PSQL -c "UPDATE custattr_int SET value=0 WHERE attrib='syncAdapterActive';"
 fi
 
-# Server-ID entfernen
 $BCSHOME/bin/Restore.sh -rmserverid
 
 echo Start BCS

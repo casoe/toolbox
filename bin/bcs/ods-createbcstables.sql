@@ -3,11 +3,13 @@ DROP TABLE IF EXISTS bcs_akquisen;
 DROP TABLE IF EXISTS bcs_auftragsplan;
 DROP TABLE IF EXISTS bcs_aufwandsplan;
 DROP TABLE IF EXISTS bcs_buchungen;
+DROP TABLE IF EXISTS bcs_eingangsrechnungen;
 DROP TABLE IF EXISTS bcs_konferenzregistrierung;
 DROP TABLE IF EXISTS bcs_mitarbeiter;
 DROP TABLE IF EXISTS bcs_organisationen;
 DROP TABLE IF EXISTS bcs_projekte;
 DROP TABLE IF EXISTS bcs_rechnungen;
+DROP TABLE IF EXISTS bcs_sachkosten;
 DROP TABLE IF EXISTS bcs_spesen;
 DROP TABLE IF EXISTS bcs_stundensaetze;
 DROP TABLE IF EXISTS bcs_termine;
@@ -92,6 +94,21 @@ CREATE TABLE bcs_buchungen (
 	letzte_aenderung_von CHARACTER VARYING,
 	aktualisiert_am CHARACTER VARYING,
 	jdbctimestamp decimal (15,0)
+);
+
+CREATE TABLE bcs_eingangsrechnungen (
+	oid CHARACTER VARYING PRIMARY KEY UNIQUE,
+	name CHARACTER VARYING,
+	beschreibung CHARACTER VARYING,
+	rechnungsdatum CHARACTER VARYING,
+	waehrung CHARACTER VARYING,
+	umsatzsteuersatz CHARACTER VARYING,
+	erloeskonto CHARACTER VARYING,
+	projekt CHARACTER VARYING,
+	lieferant CHARACTER VARYING,
+	letzte_aenderung_von CHARACTER VARYING,
+	aktualisiert_am CHARACTER VARYING,
+	jdbctimestamp DECIMAL(15,0)
 );
 
 CREATE TABLE bcs_konferenzregistrierung (
@@ -208,6 +225,27 @@ CREATE TABLE bcs_rechnungen(
 	jdbctimestamp DECIMAL(15,0)
 );
 
+CREATE TABLE bcs_sachkosten (
+	oid CHARACTER VARYING PRIMARY KEY UNIQUE,
+	name CHARACTER VARYING,
+	subtyp CHARACTER VARYING,
+	aufgabe CHARACTER VARYING,
+	projektnummer CHARACTER VARYING,
+	lieferant CHARACTER VARYING,
+	plansachkosten_referenz CHARACTER VARYING,
+	einkaufskosten_plan CHARACTER VARYING,
+	einkaufskosten_plan_eur CHARACTER VARYING,
+	einkaufskosten CHARACTER VARYING,
+	einkaufskosten_eur CHARACTER VARYING,
+	waehrung CHARACTER VARYING,
+	umrechnungskurs_id CHARACTER VARYING,
+	eingangsrechnung CHARACTER VARYING,
+	rechnungsdatum CHARACTER VARYING,
+	letzte_aenderung_von CHARACTER VARYING,
+	aktualisiert_am CHARACTER VARYING,
+	jdbctimestamp DECIMAL(15,0)
+);
+
 CREATE TABLE bcs_spesen (
 	oid CHARACTER VARYING PRIMARY KEY UNIQUE,
 	personalnummer CHARACTER VARYING,
@@ -263,6 +301,7 @@ CREATE TABLE bcs_zahlungstermine (
 	abgenommen CHARACTER VARYING,
 	uebergeordnetes_objekt CHARACTER VARYING,
 	projektnummer CHARACTER VARYING,
+	erloesklasse CHARACTER VARYING,
 	projekt_oid CHARACTER VARYING,
 	status CHARACTER VARYING,
 	zugeordnete_buchung CHARACTER VARYING,
@@ -274,41 +313,18 @@ CREATE TABLE bcs_zahlungstermine (
 	jdbctimestamp DECIMAL(15,0)
 );
 
-ALTER TABLE bcs_akquisen OWNER TO bcs
-;
-
-ALTER TABLE bcs_auftragsplan OWNER TO bcs
-;
-
-ALTER TABLE bcs_aufwandsplan OWNER TO bcs
-;
-
-ALTER TABLE bcs_buchungen OWNER TO bcs
-;
-
-ALTER TABLE bcs_konferenzregistrierung OWNER TO bcs
-;
-
-ALTER TABLE bcs_mitarbeiter OWNER TO bcs
-;
-
-ALTER TABLE bcs_organisationen OWNER TO bcs
-;
-
-ALTER TABLE bcs_projekte OWNER TO bcs
-;
-
-ALTER TABLE bcs_rechnungen OWNER TO bcs
-;
-
-ALTER TABLE bcs_spesen OWNER TO bcs
-;
-
-ALTER TABLE bcs_stundensaetze OWNER TO bcs
-;
-
-ALTER TABLE bcs_termine OWNER TO bcs
-;
-
-ALTER TABLE bcs_zahlungstermine OWNER TO bcs
-;
+ALTER TABLE bcs_akquisen OWNER TO bcs;
+ALTER TABLE bcs_auftragsplan OWNER TO bcs;
+ALTER TABLE bcs_aufwandsplan OWNER TO bcs;
+ALTER TABLE bcs_buchungen OWNER TO bcs;
+ALTER TABLE bcs_eingangsrechnungen OWNER TO bcs;;
+ALTER TABLE bcs_konferenzregistrierung OWNER TO bcs;
+ALTER TABLE bcs_mitarbeiter OWNER TO bcs;
+ALTER TABLE bcs_organisationen OWNER TO bcs;
+ALTER TABLE bcs_projekte OWNER TO bcs;
+ALTER TABLE bcs_rechnungen OWNER TO bcs;
+ALTER TABLE bcs_spesen OWNER TO bcs;
+ALTER TABLE bcs_sachkosten OWNER TO bcs;
+ALTER TABLE bcs_stundensaetze OWNER TO bcs;
+ALTER TABLE bcs_termine OWNER TO bcs;
+ALTER TABLE bcs_zahlungstermine OWNER TO bcs;

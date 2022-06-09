@@ -24,11 +24,13 @@ $PSQL_ODS30 << EOF
 delete from bcs_akquisen;
 delete from bcs_auftragsplan;
 delete from bcs_aufwandsplan;
+delete from bcs_eingangsrechnungen;
 delete from bcs_konferenzregistrierung;
 delete from bcs_mitarbeiter;
 delete from bcs_organisationen;
 delete from bcs_projekte;
 delete from bcs_rechnungen;
+delete from bcs_sachkosten;
 delete from bcs_spesen;
 delete from bcs_stundensaetze;
 delete from bcs_zahlungstermine;
@@ -46,11 +48,13 @@ $PSQL_ODS70 << EOF
 delete from bcs_akquisen;
 delete from bcs_auftragsplan;
 delete from bcs_aufwandsplan;
+delete from bcs_eingangsrechnungen;
 delete from bcs_konferenzregistrierung;
 delete from bcs_mitarbeiter;
 delete from bcs_organisationen;
 delete from bcs_projekte;
 delete from bcs_rechnungen;
+delete from bcs_sachkosten;
 delete from bcs_spesen;
 delete from bcs_stundensaetze;
 delete from bcs_zahlungstermine;
@@ -133,6 +137,8 @@ $SCHEDULERCLIENT -t JDBC_ODS30_Acquisitions
 $SCHEDULERCLIENT -t JDBC_ODS30_Allowances
 $SCHEDULERCLIENT -t JDBC_ODS30_Conferenceregistrations
 $SCHEDULERCLIENT -t JDBC_ODS30_Costrates
+$SCHEDULERCLIENT -t JDBC_ODS30_IncomingInvoices
+$SCHEDULERCLIENT -t JDBC_ODS30_EffortsFixed
 $SCHEDULERCLIENT -t JDBC_ODS30_Effortplan
 $SCHEDULERCLIENT -t JDBC_ODS30_Employees
 $SCHEDULERCLIENT -t JDBC_ODS30_Invoices
@@ -146,6 +152,8 @@ $SCHEDULERCLIENT -t JDBC_ODS70_Acquisitions
 $SCHEDULERCLIENT -t JDBC_ODS70_Allowances
 $SCHEDULERCLIENT -t JDBC_ODS70_Conferenceregistrations
 $SCHEDULERCLIENT -t JDBC_ODS70_Costrates
+$SCHEDULERCLIENT -t JDBC_ODS70_IncomingInvoices
+$SCHEDULERCLIENT -t JDBC_ODS70_EffortsFixed
 $SCHEDULERCLIENT -t JDBC_ODS70_Effortplan
 $SCHEDULERCLIENT -t JDBC_ODS70_Employees
 $SCHEDULERCLIENT -t JDBC_ODS70_Invoices

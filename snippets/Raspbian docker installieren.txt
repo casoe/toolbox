@@ -1,6 +1,6 @@
 ### docker ###
 curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh && sudo usermod -aG docker carsten && sudo reboot
 
-### Test run (vorher relog wegen der angepassten Gruppe)
+### Test run (nach Reboot)
 docker run hello-world
 

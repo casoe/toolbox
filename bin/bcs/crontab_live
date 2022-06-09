@@ -33,8 +33,8 @@
   59 21 *   *   *     /opt/projektron/bcs/server/bin/AdminMessage.sh "System shutting down for daily backup in 1 minute, please save your work in time." > /dev/null 2>&1
   00 22 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-backup.sh > /dev/null 2>&1
 
-# Run daily check of the bcs-application.log (e.g. for exhausted license pools) at 23:45 hrs
-  45 23 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-checklog.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-check.log 2>&1
+# Run daily check of the bcs-application.log (e.g. for exhausted license pools) at 06:30 hrs
+  30 06 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-checklog.sh >> /opt/projektron/bcs/server/log/inform_cron/daily-check.log 2>&1
 
 # Run monlist interface every weekday at 21:30 hrs (bcs-export) and 21:45 hrs (monlist-import)
   30 21 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2monlist-step1.sh >  /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2monlist.log 2>&1
@@ -44,16 +44,18 @@
   00 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-bcs2ods.log 2>&1
 
 # Run hourly data-export of acquitions in ods30 and ods70 (only between 0600 and 2155 hrs)
-  00 6    *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-acquisitions.sh > /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-acquisitions.log 2>&1
+  00 6    *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-acquisitions.sh >  /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-acquisitions.log 2>&1
   55 6-21 *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-acquisitions.sh >> /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-acquisitions.log 2>&1
+  00 6    *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-paymentdays.sh  >  /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-paymentdays.log 2>&1
+  55 6-21 *   *   *   /opt/projektron/bcs/server/inform_scripts/cron-export-bcs2ods-paymentdays.sh  >> /opt/projektron/bcs/server/log/inform_cron/hourly-export-bcs2ods-paymentdays.log 2>&1
 
 # Datev-BCS: daily data export of the unexported invoice items of finished invoices of the current month at 20:30 hrs
   30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb30-currentmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb30-currentmonth.log 2>&1
   30 20 *   *   1-5   /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb70-currentmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb70-currentmonth.log 2>&1
 
 # Datev-BCS: single data export of the unexported invoice items of finished invoices of the previous month at 20:30 hrs
-  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb30-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/export-invoiceitems-datev-gb30-previousmonth.log 2>&1
-  30 20 1-12  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb70-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/export-invoiceitems-datev-gb70-previousmonth.log 2>&1
+  30 20 1-20  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb30-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb30-previousmonth.log 2>&1
+  30 20 1-20  *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-invoiceitems-datev-gb70-previousmonth.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-invoiceitems-datev-gb70-previousmonth.log 2>&1
 
 # Run daily data-integration of data from monlist to the ods at 01:30 hrs
   30 01 *   *   *     /opt/projektron/bcs/server/inform_scripts/cron-export-pdi2ods.sh > /opt/projektron/bcs/server/log/inform_cron/daily-export-pdi2ods.log 2>&1

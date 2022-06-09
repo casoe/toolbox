@@ -14,5 +14,7 @@ cd /opt/projektron/bcs/server
 zip -r /opt/projektron/bcs/backup/conf_${FULLDATE}.zip conf/
 zip -r /opt/projektron/bcs/backup/conf_${FULLDATE}.zip conf_local_live/
 zip -r /opt/projektron/bcs/backup/conf_${FULLDATE}.zip conf_local_test/
+zip -r /opt/projektron/bcs/backup/conf_${FULLDATE}.zip webapp/css/bcs_custom.css
+zip -r /opt/projektron/bcs/backup/conf_${FULLDATE}.zip webapp/css/customimages/
 
 echo ...Fertig

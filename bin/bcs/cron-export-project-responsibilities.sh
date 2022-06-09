@@ -4,6 +4,7 @@
 
 SCRIPT="daily-export-project-responsibilities.sh"
 BCSHOME="/opt/projektron/bcs/server"
+SOURCEDIR="/opt/projektron/bcs/server/inform_scripts"
 BCSEXPORT="/opt/projektron/bcs/export"
 TARGETDIR="GB30/gs3/Wiki/Quality_Support/ProjektVerantwortlichkeiten"
 MOUNTDIR="/mnt/dfs"
@@ -23,15 +24,19 @@ if [ $? -ne 0 ]; then
 }
 fi;
 
+### Copy db file to export dir for processing ###
+cp -f -v $SOURCEDIR/ProjectResponsibilities.db $BCSEXPORT/ProjectResponsibilities.db 
+
+
 ### Start SchedulerClient for Export
 echo Starte Export...
-$BCSHOME/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t CSV_ProjectResponsibilities-INFORM-Cronjob
+$BCSHOME/bin/SchedulerClient.sh -u cron -p e6c92f3411 -j ExportJob -t JDBC_Export_ProjectResponsibilities-INFORM-Cronjob
 
 ### Wait for 60 seconds
-sleep 60s
+sleep 30s
 
 ### Copy Export file
-cp -f -v $BCSEXPORT/ProjectResponsibilities.csv $MOUNTDIR/$TARGETDIR/ProjectResponsibilities.csv
+cp -f -v $BCSEXPORT/ProjectResponsibilities.db $MOUNTDIR/$TARGETDIR/ProjectResponsibilities.db
 
 
 if [ "$mountcheck" == "true" ] ; then
@@ -48,6 +53,6 @@ fi;
 
 
 ### Aufräumen des Export-Verzeichnisses
-rm -rf $BCSEXPORT/ProjectResponsibilities.csv
+rm -rf $BCSEXPORT/ProjectResponsibilities.db
 
 echo ...Fertig
