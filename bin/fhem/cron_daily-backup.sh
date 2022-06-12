@@ -78,7 +78,7 @@ fi
 
 ### rsync der lokalen Backup-Daten zum NAS
 echo "INFO rsync der lokalen Backup-Daten zum NAS"
-sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades/fhem
+sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades.daily
 
 sudo umount $MOUNTDIR
 
