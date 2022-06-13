@@ -55,6 +55,9 @@ echo "INFO Löschen Logfiles älter als 10 Wochen"
 find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70
 find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
 
+### Logile und Mailbox in Home löschen
+rm -rf $HOME/raspiBackup.*
+
 ### Log per Mail versenden
 #echo "INFO Log per Mail versenden"
 #cat $LOG | mail -s "Hades (FHEM) Weekly Backup" soehrens@gmail.com
