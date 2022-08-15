@@ -7,6 +7,7 @@
 # Historie
 # 08.08.2022 Initiale Version
 
+### Variablen
 HOME="/home/carsten"
 RSYNC="/usr/bin/rsync"
 MOUNTDIR="/mnt/backup"
@@ -15,6 +16,9 @@ BACKUPDIR="/home/carsten/docker/data/pihole/etc-pihole/backup"
 ### Startzeit speichern
 echo "INFO Start von $0"
 START=$(date +%s)
+
+### Backup der Pi-Hole Daten über den Container in ein gemapptes Volume
+docker exec pihole pihole -a teleporter /etc/pihole/backup/pihole-charon-teleporter_$(date -I).tar
 
 ### Löschen alter Backupdateien älter als 4 Wochen
 echo "INFO Löschen Logfiles älter als 4 Wochen"
