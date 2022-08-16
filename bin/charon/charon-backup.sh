@@ -6,6 +6,7 @@
 
 # Historie
 # 08.08.2022 Initiale Version
+# 16.08.2022 Bugfixes und Verbesserungen
 
 ### Variablen
 HOME="/home/carsten"
@@ -23,7 +24,7 @@ docker exec pihole pihole -a teleporter /etc/pihole/backup/pihole-charon-telepor
 ### Löschen alter Backupdateien älter als 4 Wochen
 echo "INFO Löschen Logfiles älter als 4 Wochen"
 find $BACKUPDIR/* -mindepth 1 -mtime +28
-find $BACKUPDIR/* -mindepth 1 -mtime +28 -delete
+sudo find $BACKUPDIR/* -mindepth 1 -mtime +28 -delete
 
 ### NAS mounten; bei Fehler Abbruch und Mail versenden
 echo "INFO NAS mounten; bei Fehler Abbruch und Mail versenden"
