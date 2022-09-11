@@ -9,9 +9,10 @@
 # 10.01.2022 Format für Angabe kW/h auf drei Nachkommastellen begrenzt
 # 31.01.2022 delete-Statement für fehlerhafte Daten von ENERGY_Yesterday ergänzt
 # 16.02.2022 Variablen für YDA und DBY umbenannt
+# 11.09.2022 Nachricht mit Durschnittswerten aufgebohrtm, geht jetzt an den anderen Chat
 
 TOKEN=312020795:AAHF3Uc_5L6mcn9hlo7oEhaDfZ5ypWCc3Mk
-CHAT_ID=9437849
+CHAT_ID=-683449865
 URL="https://api.telegram.org/bot$TOKEN/sendMessage"
 PSQL="/usr/bin/psql"
 DBNAME="postgresql://fhem:fhem@localhost:5432/fhem"
@@ -32,7 +33,7 @@ TOTAL2=$($PSQL -X $DBNAME -t -c "SELECT DISTINCT ON (timestamp::date) value FROM
 
 # Verbrauch berechnen (dafür muss bc installiert sein -> apt install bc)
 CONSUMPTION=$(bc <<< "$TOTAL1-$TOTAL2")
-COSTS=$(bc <<< "$CONSUMPTION*0.25")
+COSTS=$(bc <<< "$CONSUMPTION*0.3281")
 
 # Alte Datensätze mit reading 'daily_consumption' als current entfernen
 # Verbrauch von gestern als zusätzliche Zeile in die Datenbank einfügen (current und history)
@@ -47,7 +48,28 @@ CONSUMPTION=$(printf "%0.3f\n" $CONSUMPTION | sed 's/\./,/g')
 COSTS=$(printf "%0.2f\n" $COSTS | sed 's/\./,/g')
 
 # Nachricht für Telegram zusammensetzen
-MESSAGE="Stromverbrauch $YESTERDAY: $CONSUMPTION kW/h (ca. $COSTS EUR)"
+MESSAGE="Stromverbrauch $YESTERDAY: $CONSUMPTION kW/h, ca. $COSTS EUR "
+
+JAHR=$(printf '%(%Y)T\n' -1)
+DURCHSCHNITT="(Durchschnitte der letzten Jahre "
+# Schleife über die bisherigen Jahre und Durchschnittsverbräuche
+for ((i=2017; i<=$JAHR; i++)); do
+  DURCHSCHNITT+=" "$i:
+  DURCHSCHNITT+=$($PSQL -X $DBNAME -t -c "select round(avg(cast (value as decimal)),3) from history where reading='daily_consumption' and extract (year from timestamp)=$i;")
+  DURCHSCHNITT+=" "kW/h
+
+  if [[ "$i" !=  "$JAHR" ]]; then
+    DURCHSCHNITT+=," "
+  fi
+
+done
+
+DURCHSCHNITT+=")"
+
+# Punkte durch Kommata ersetzen
+DURCHSCHNITT=$(echo $DURCHSCHNITT | sed 's/\./,/g')
+MESSAGE+=$DURCHSCHNITT
 
 # Nachricht über Telegram absetzen
+#cho $MESSAGE
 curl -s -X POST $URL -d chat_id=$CHAT_ID -d text="$MESSAGE"
