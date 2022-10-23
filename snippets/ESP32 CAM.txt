@@ -1,0 +1,26 @@
+Wie hat es geklappt?
+
+Anschluss auf dem Breadboard wie hier:
+https://www.fambach.net/esp32-cam-modul/esp32cam_onbreadboard/
+
+ABER: 
+- FTDI auf 5V gesetzt
+- GND und 5V wie bei jomjol angeschlossen (gegenüberliegende Seite die ersten beiden Pins)
+
+Also eigentlich wie hier:
+https://github.com/jomjol/AI-on-the-edge-device/wiki/Installation
+
+Der Shortcut für den Bootmode blieb die ganze Zeit geschlossen.
+
+Folgende Befehle zum Flashen (Windows 10, cmd mit Administrator)
+
+python -m esptool --port COM3 erase_flash
+python -m esptool --port COM3 write_flash 0x01000 bootloader.bin 0x08000 partitions.bin 0x10000 firmware.bin
+
+
+Vorbereitung der SD-Karte
+- Partionen entfernt
+- Neues einfaches Volume mit 4096MB
+- Formatierung mit FAT32
+- Inhalt aus dem github-Repo abgelegt
+- wlan.ini editiert
