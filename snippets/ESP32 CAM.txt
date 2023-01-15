@@ -12,10 +12,10 @@ https://github.com/jomjol/AI-on-the-edge-device/wiki/Installation
 
 Der Shortcut für den Bootmode blieb die ganze Zeit geschlossen.
 
-Folgende Befehle zum Flashen (Windows 10, cmd mit Administrator)
+Folgende Befehle zum Flashen (Windows 10, cmd)
 
-python -m esptool --port COM3 erase_flash
-python -m esptool --port COM3 write_flash 0x01000 bootloader.bin 0x08000 partitions.bin 0x10000 firmware.bin
+python -m esptool --port COM4 erase_flash
+python -m esptool --port COM4 write_flash 0x01000 bootloader.bin 0x08000 partitions.bin 0x10000 firmware.bin
 
 
 Vorbereitung der SD-Karte
