@@ -8,14 +8,13 @@
 # 08.08.2022 Initiale Version
 # 16.08.2022 Bugfixes und Verbesserungen
 # 15.01.2023 Bugfix an find --delete und Erweiterung um DokuWiki-Seiten
+# 02.02.2023 Kompletten data-Ordner von DokuWiki sichern
 
 ### Variablen
 HOME="/home/carsten"
 RSYNC="/usr/bin/rsync"
-ZIP="/usr/bin/zip"
 MOUNTDIR="/mnt/backup"
 BACKUPDIR="/home/carsten/docker/data/pihole/etc-pihole/backup"
-ZIPTARGET="$BACKUPDIR/dokuwiki-backup_$(date -I).zip"
 
 ### Startzeit speichern
 echo "INFO Start von $0"
@@ -25,7 +24,7 @@ START=$(date +%s)
 docker exec pihole pihole -a teleporter /etc/pihole/backup/pihole-charon-teleporter_$(date -I).tar
 
 ### Backup der DokuWiki-Seiten
-$ZIP -rv $ZIPTARGET /home/carsten/docker/data/dokuwiki/dokuwiki/data/pages/*.txt
+tar cvzf $BACKUPDIR/dokuwiki-backup_$(date -I).tgz /home/carsten/docker/data/dokuwiki/dokuwiki/data
 
 ### Löschen alter Backupdateien älter als 4 Wochen
 echo "INFO Löschen Logfiles älter als 4 Wochen"
