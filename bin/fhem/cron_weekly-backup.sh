@@ -52,8 +52,8 @@ echo Backup time $(date -u -d "0 $(date +%s) seconds - $START seconds" +"%H:%M:%
 
 ### Löschen alter Logfiles älter als 10 Wochen
 echo "INFO Löschen Logfiles älter als 10 Wochen"
-find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70
-find $HOME/backup/log/weekly_backup_* -mindepth 1 -mtime +70 -delete
+find $HOME/backup/log/weekly_backup_* -mtime +70
+find $HOME/backup/log/weekly_backup_* -mtime +70 -delete
 
 ### Logile und Mailbox in Home löschen
 rm -rf $HOME/raspiBackup.*
