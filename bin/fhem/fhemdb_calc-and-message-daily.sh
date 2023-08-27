@@ -9,7 +9,10 @@
 # 10.01.2022 Format für Angabe kW/h auf drei Nachkommastellen begrenzt
 # 31.01.2022 delete-Statement für fehlerhafte Daten von ENERGY_Yesterday ergänzt
 # 16.02.2022 Variablen für YDA und DBY umbenannt
-# 11.09.2022 Nachricht mit Durschnittswerten aufgebohrtm, geht jetzt an den anderen Chat
+# 11.09.2022 Nachricht mit Durchschnittswerten aufgebohrt, geht jetzt an den anderen Chat
+# 27.08.2023 Skript außer Betrieb genommen (läuft jetzt direkt in FHEM), exit 0 an den Anfang gestellt
+
+exit 0
 
 TOKEN=312020795:AAHF3Uc_5L6mcn9hlo7oEhaDfZ5ypWCc3Mk
 CHAT_ID=-683449865

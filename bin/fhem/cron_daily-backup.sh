@@ -66,6 +66,7 @@ done
 ### NAS mounten; bei Fehler Abbruch und Mail versenden
 echo "INFO NAS mounten; bei Fehler Abbruch und Mail versenden"
 if [ ! $(mount | grep -o $MOUNTDIR ) ]; then
+  echo "sudo mount $MOUNTDIR"
   sudo mount $MOUNTDIR
 
 	if [ $? -ne 0 ]; then
@@ -78,8 +79,10 @@ fi
 
 ### rsync der lokalen Backup-Daten zum NAS
 echo "INFO rsync der lokalen Backup-Daten zum NAS"
+echo "sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades.daily"
 sudo $RSYNC -avht --update --no-o --no-g --no-perms $HOME/backup/ $MOUNTDIR/hades.daily
 
+echo "sudo umount $MOUNTDIR"
 sudo umount $MOUNTDIR
 
 ### Backup-Zeit ausgeben

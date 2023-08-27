@@ -32,5 +32,3 @@ HOME=/home/carsten
 # 00 01 *   *   *     cron_daily-backup.sh  > $HOME/backup/log/db_backup_$(date +\%Y-\%m-\%d).log     2>&1
  00 01 *   *   *     cron_daily-backup.sh  > $HOME/backup/log/db_backup_$(date -I).log     2>&1
  00 02 *   *   sat   cron_weekly-backup.sh > $HOME/backup/log/weekly_backup_$(date -I).log 2>&1
-
- 35 06 *   *   *     /home/carsten/bin/cron_calc-and-message-daily.sh > /dev/null 2>&1
