@@ -1,0 +1,49 @@
+﻿# IP-Adresse im Login-Screen anzeigen
+nano /etc/issue.net
+# Folgende Zeile ergänzen, darunter eine Leerzeile
+IP-Address: \4
+
+# Bash konfigurieren
+nano .bashrc
+
+# SSH Zugang
+mkdir .ssh
+nano .ssh/authorized_keys
+# Folgende Zeile ergänzen
+ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAQEAsfDW7HTO2aNYj74C5ZyQyWoeyTw6J9h9ElQG7k/pW/JjT428Ghdfr7thYBjIjvvUu/U5dFbAYaUxBf+Xt+P8jLcSwv1DxfbnP4qJaKg5Gu3an88XZna8x2dn8FYYQ7/BJL/iUGpeL3h0jyunBIwOPoIncUK+xbEB3rP5jmS09GzBpreH7ELqrZlT6pYiqREAs9l3nFF38mLWqLUHdT74NIAK4UGtFHfAiL6w42CnEYfxp4vkJe0yExvI/bCdJsq3wF+gGtHXrHwVmPe0bJ/heN/mzWEwKYXC5K77lheUlDq/k/Iz453zPR/EJkwO5LNRdTdd5MhgpWMa/LPUJeXk8w== rsa-key-20130422
+chmod 0700 .ssh && chmod 0600 .ssh/authorized_keys
+
+# Systemwerkzeuge installieren
+sudo apt install -y dselect mc unp
+
+# Bluetooth und WLAN aus
+sudo nano /boot/config.txt
+
+# Am Ende einfügen
+[all]
+# Disable WiFi and Bluetooth
+dtoverlay=disable-wifi
+dtoverlay=disable-bt
+
+# Statische IP festlegen
+sudo nano /etc/dhcpcd.conf
+
+# How do you disable IPv6 systemwide? Simple.
+# Open the /etc/sysctl.conf file with the command sudo nano /etc/sysctl.conf and add the following to the bottom of the file:
+
+sudo nano /etc/sysctl.conf
+
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+
+# Docker stats für RAM aktivieren
+sudo nano /boot/cmdline.txt
+
+# Am Ende ergänzen (nach rootwait)
+cgroup_enable=cpuset cgroup_enable=memory cgroup_memory=1
+
+# docker installieren
+curl -fsSL https://get.Docker.com -o get-Docker.sh
+sudo sh get-Docker.sh
+sudo usermod -aG docker carsten
