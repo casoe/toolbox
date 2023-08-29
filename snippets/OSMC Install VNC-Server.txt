@@ -1,9 +1,0 @@
-# https://discourse.osmc.tv/t/howto-install-a-vnc-server-on-the-raspberry-pi/1517/394
-# Grep the install file:
-wget https://raw.githubusercontent.com/MarkusLange/VNC-Server-install-script-for-OSMC/master/osmc_vnc_install_cli.bash
-
-# Make it executable:
-chmod +x osmc_vnc_install_cli.bash
-
-# Start the GUI with:
-sudo ./osmc_vnc_install_cli.bash
