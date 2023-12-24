@@ -4,6 +4,7 @@
 
 # set -x
 
+HOME="/home/pi"
 PGDUMP="/usr/bin/pg_dump"
 PSQL="/usr/bin/psql"
 ZIP="/usr/bin/zip"
@@ -25,9 +26,14 @@ EOF
 $PGDUMP -v -Fc --file=$DBTARGET $DBNAME >> $LOG 2>&1
 
 ### Archivieren der Config-Dateien
-$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/fhem.cfg >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/db.conf >> $LOG 2>&1
-$ZIP -rv $ZIPTARGET /home/pi/fhem-docker/fhem/www/gplot/myPlot_*.gplot >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/fhem.cfg >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/db.conf >> $LOG 2>&1
+$ZIP -rv $ZIPTARGET $HOME/fhem-docker/fhem/www/gplot/myPlot_*.gplot >> $LOG 2>&1
+
+### Löschen aller lokalen Dateien von Tag -15 bis -30
+echo "INFO Löschen veralteter lokaler Dateien"
+find $HOME/backup/ -name "*backup*" -type f -mtime +30 -delete  >> $LOG 2>&1
+find $HOME/fhem-docker/fhem/log -name "fhem-*.log" -type f -mtime +30 -delete  >> $LOG 2>&1
 
 ### rsync nach morpheus
 #$RSYNC -avz /home/pi/backup/ osmc@192.168.2.38:$REMOTE >> $LOG 2>&1
