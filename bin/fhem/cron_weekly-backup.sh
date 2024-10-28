@@ -14,6 +14,7 @@
 # 22.05.2022 Nach Umstellung auf Container das Stoppen und Starten der Postgres-DB entfernt
 # 23.05.2022 Diverse Pfade korrigiert
 # 28.05.2022 Logging noch mal angepasst (Funktion wieder entfernt)
+# 28.10.2024 Fehler in Kommentar korrigiert
 
 HOME="/home/carsten"
 RASPIBACKUP="/usr/local/bin/raspiBackup.sh"
@@ -55,7 +56,7 @@ echo "INFO Löschen Logfiles älter als 10 Wochen"
 find $HOME/backup/log/weekly_backup_* -mtime +70
 find $HOME/backup/log/weekly_backup_* -mtime +70 -delete
 
-### Logile und Mailbox in Home löschen
+### Logile in Home löschen
 rm -rf $HOME/raspiBackup.*
 
 ### Log per Mail versenden

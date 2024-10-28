@@ -15,6 +15,7 @@
 # 01.05.2022 Umstellung der Backup-Pfade auf das Docker-Setup, HOME in Variable gesetzt
 # 23.05.2022 Löschen des Logs beim Weekly-Backup entfernt
 # 28.05.2022 Logging noch mal angepasst (Funktion wieder entfernt)
+# 28.10.2024 Restore 1x die Woche hinzugefügt, um Bloat in der DB loszuwerden
 
 HOME="/home/carsten"
 PGDUMP="/usr/bin/pg_dump"
@@ -45,6 +46,18 @@ $PGDUMP -v -Fc --file=$DBTARGET $DBNAME
 
 ### Wiederherstellen-Hinweis im Logfile
 echo "INFO Wiederherstellen mit: pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET"
+
+### Samstagabend und Zeit für einen Restore, um Bloat loszuwerden
+if [[ $(date +%u) -eq 6 ]]; then
+
+  # Datenbank-Logging in FHEM pausieren
+  echo "set dblog reopen 7200" | /bin/nc -w5 localhost 7072
+  # Restore
+  pg_restore -Fc -v --clean -h localhost -U fhem -d fhem $DBTARGET
+  # Datenbank-Logging in FHEM fortsetzen
+  echo "set dblog reopen" | /bin/nc -w5 localhost 7072
+
+fi
 
 ### Archivieren des Skripts und der Config-Dateien
 echo "INFO Archivieren der wichtigsten Config-Dateien"
