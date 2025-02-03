@@ -30,4 +30,4 @@ HOME=/home/carsten
 # For more information see the manual pages of crontab(5) and cron(8)
 #
 # m  h  dom mon dow   command
-  30 03 *   *   *     hass-backup.sh > /opt/homeAssistant/data/backupshass-backup_$(date -I).log 2>&1
+  30 03 *   *   *     hass-backup.sh > /home/carsten/backup/hass-backup_$(date -I).log 2>&1
