@@ -9,6 +9,7 @@
 # 16.08.2022 Bugfixes und Verbesserungen
 # 15.01.2023 Bugfix an find --delete und Erweiterung um DokuWiki-Seiten
 # 02.02.2023 Kompletten data-Ordner von DokuWiki sichern
+# 25.02.2025 Pi-Hole rausgenommen wegen Umstellung auf V6 (Teleporter funktioniert anders)
 
 ### Variablen
 HOME="/home/carsten"
@@ -19,9 +20,6 @@ BACKUPDIR="/home/carsten/docker/data/pihole/etc-pihole/backup"
 ### Startzeit speichern
 echo "INFO Start von $0"
 START=$(date +%s)
-
-### Backup der Pi-Hole Daten über den Container in ein gemapptes Volume
-docker exec pihole pihole -a teleporter /etc/pihole/backup/pihole-charon-teleporter_$(date -I).tar
 
 ### Backup der DokuWiki-Seiten
 tar cvzf $BACKUPDIR/dokuwiki-backup_$(date -I).tgz /home/carsten/docker/data/dokuwiki/dokuwiki/data
